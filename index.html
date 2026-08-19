@@ -259,7 +259,6 @@
             };
         }
 
-        // Menú para elegir entre Copiar Automáticamente o Pegar para Cargar
         function openManagerModal() {
             const modal = document.getElementById('custom-modal');
             document.getElementById('modal-title-text').innerText = "Gestión de Partida";
@@ -269,7 +268,7 @@
             const btnContainer = document.getElementById('modal-buttons-container');
             btnContainer.innerHTML = `
                 <button class="modal-btn modal-btn-cancel" id="modal-close-mgr">Cerrar</button>
-                <button class="modal-btn modal-btn-confirm" id="modal-go-copy" style="background:#27ae60;">Copiar Código</button>
+                <button class="modal-btn modal-btn-confirm" id="modal-go-copy">Copiar Código</button>
                 <button class="modal-btn modal-btn-confirm" id="modal-go-load">Cargar Código</button>
             `;
             
@@ -277,7 +276,6 @@
             
             document.getElementById('modal-close-mgr').onclick = () => { modal.style.display = 'none'; };
             
-            // ACCIÓN 1: Copiar directamente al portapapeles con un solo toque
             document.getElementById('modal-go-copy').onclick = () => {
                 modal.style.display = 'none';
                 if (player.name === "") {
@@ -290,12 +288,10 @@
                 navigator.clipboard.writeText(currentCode).then(() => {
                     showModalAlert("¡Copiado!", "El código de tu partida se ha copiado automáticamente al portapapeles. ¡Listo para pegar!");
                 }).catch(() => {
-                    // Fallback por si el navegador bloquea el portapapeles directo
                     prompt("Copia tu código de partida manualmente:", currentCode);
                 });
             };
 
-            // ACCIÓN 2: Abrir cuadro de texto para pegar y cargar una partida
             document.getElementById('modal-go-load').onclick = () => {
                 document.getElementById('modal-title-text').innerText = "Cargar Partida";
                 document.getElementById('modal-msg-text').innerText = "Pega aquí abajo el código de tu partida:";
@@ -306,7 +302,7 @@
                 
                 btnContainer.innerHTML = `
                     <button class="modal-btn modal-btn-cancel" id="modal-close-load">Cancelar</button>
-                    <button class="modal-btn modal-btn-confirm" id="modal-execute-load" style="background:#27ae60;">Cargar</button>
+                    <button class="modal-btn modal-btn-confirm" id="modal-execute-load">Cargar</button>
                 `;
                 
                 setTimeout(() => textarea.focus(), 50);
