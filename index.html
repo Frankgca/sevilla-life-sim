@@ -39,23 +39,25 @@
             font-weight: bold; font-size: 1em; 
         }
 
-        /* PANTALLA DE JUEGO - DISEÑO ORIGINAL COMPLETO */
-        header { background: #C0392B; color: white; padding: 20px; text-align: center; flex-shrink: 0; }
-        #player-name { font-size: 1.4em; }
-        #player-dni { font-size: 0.85em; background: rgba(0,0,0,0.2); display: inline-block; padding: 2px 10px; border-radius: 15px; margin-top: 5px; }
+        /* PANTALLA DE JUEGO */
+        header { background: #C0392B; color: white; padding: 18px 20px; text-align: center; flex-shrink: 0; }
+        #player-name { font-size: 1.35em; font-weight: bold; margin-bottom: 3px; }
+        #player-dni { font-size: 0.8em; background: rgba(0,0,0,0.2); display: inline-block; padding: 2px 8px; border-radius: 10px; margin-bottom: 10px; }
         
-        .stats { display: flex; justify-content: space-around; margin-top: 15px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; }
+        .stats { display: flex; justify-content: space-around; background: rgba(255,255,255,0.15); padding: 6px; border-radius: 8px; font-size: 0.9em; }
         
         #event-log { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
         .log-entry { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); color: #333; }
         
-        /* PANEL DE ACCIONES INFERIOR (Estudiar y Buscar trabajo) */
-        #actions-panel { display: flex; gap: 10px; padding: 15px; background: white; border-top: 1px solid #eee; flex-shrink: 0; }
-        .action-btn { flex: 1; padding: 12px; background: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        
-        /* FOOTER CON BOTÓN DE REINICIAR INTEGRADO */
-        footer { padding: 12px 15px; background: #f9f9f9; text-align: center; flex-shrink: 0; border-top: 1px solid #eef0f2; }
-        .reset-btn { background: none; border: none; color: #e74c3c; font-size: 0.85em; text-decoration: underline; cursor: pointer; font-weight: 600; }
+        /* PANEL DE ACCIONES INFERIOR CON TODOS LOS BOTONES INTEGRADOS */
+        #actions-panel { 
+            display: flex; flex-direction: column; gap: 8px; padding: 15px; 
+            background: white; border-top: 1px solid #eee; flex-shrink: 0; 
+        }
+        .action-row { display: flex; gap: 10px; }
+        .action-btn { flex: 1; padding: 12px; background: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95em; }
+        .job-btn { background: #27ae60; }
+        .reset-btn { width: 100%; padding: 10px; background: #e74c3c; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -78,7 +80,7 @@
 
         <!-- PANTALLA DE JUEGO -->
         <header>
-            <h1 id="player-name">---</h1>
+            <div id="player-name">---</div>
             <div id="player-dni">DNI: ---</div>
             <div class="stats">
                 <div>❤️ <span id="health-val">100</span>%</div>
@@ -88,15 +90,14 @@
 
         <main id="event-log"></main>
 
-        <!-- BOTONES DE ACCIÓN ORIGINALES -->
+        <!-- PANEL DE ACCIONES CON BOTÓN DE REINICIAR INTEGRADO -->
         <div id="actions-panel">
-            <button class="action-btn" onclick="study()">Estudiar</button>
-            <button class="action-btn" onclick="searchJob()" style="background: #27ae60;">Buscar trabajo</button>
-        </div>
-
-        <footer>
+            <div class="action-row">
+                <button class="action-btn" onclick="study()">Estudiar</button>
+                <button class="action-btn job-btn" onclick="searchJob()">Buscar trabajo</button>
+            </div>
             <button class="reset-btn" onclick="resetGame()">Reiniciar partida</button>
-        </footer>
+        </div>
     </div>
     
     <script>
