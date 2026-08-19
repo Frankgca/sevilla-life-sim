@@ -39,15 +39,14 @@
             font-weight: bold; font-size: 1em; 
         }
 
-        /* PANTALLA DE JUEGO (ORDEN ORIGINAL: Nombre arriba, DNI debajo) */
+        /* PANTALLA DE JUEGO - DISEÑO ORIGINAL RESTAURADO */
         header { background: #C0392B; color: white; padding: 20px; text-align: center; flex-shrink: 0; }
-        #player-name { font-size: 1.4em; font-weight: bold; margin-bottom: 5px; }
-        #player-dni { font-size: 0.85em; background: rgba(0,0,0,0.2); display: inline-block; padding: 2px 10px; border-radius: 15px; margin-bottom: 12px; }
+        #player-name { font-size: 1.4em; }
+        #player-dni { font-size: 0.85em; background: rgba(0,0,0,0.2); display: inline-block; padding: 2px 10px; border-radius: 15px; margin-top: 5px; }
         
-        .stats { display: flex; justify-content: space-around; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 10px; }
-        
-        #event-log { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .log-entry { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); color: #333; }
+        .stats { display: flex; justify-content: space-around; margin-top: 15px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; }
+        #event-log { flex-grow: 1; padding: 20px; overflow-y: auto; }
+        .log-entry { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         
         #actions-panel { display: flex; gap: 10px; padding: 15px; background: white; border-top: 1px solid #eee; flex-shrink: 0; }
         .action-btn { flex: 1; padding: 12px; background: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
@@ -74,9 +73,9 @@
             </div>
         </div>
 
-        <!-- PANTALLA DE JUEGO -->
+        <!-- PANTALLA DE JUEGO ORIGINAL -->
         <header>
-            <div id="player-name">---</div>
+            <h1 id="player-name">---</h1>
             <div id="player-dni">DNI: ---</div>
             <div class="stats">
                 <div>❤️ <span id="health-val">100</span>%</div>
@@ -98,8 +97,9 @@
     <script>
         let player = { name: "", dni: "", age: 0, health: 100, happiness: 100, logs: [] };
 
+        // Generador de DNI español realista (rango válido de 8 cifras + letra de control oficial)
         function generateDNI() {
-            let num = Math.floor(10000000 + Math.random() * 90000000);
+            let num = Math.floor(10000000 + Math.random() * 68999999);
             let letters = "TRWAGMYFPDXBNJZSQVHLCKE";
             return `${num}${letters.charAt(num % 23)}`;
         }
@@ -167,7 +167,6 @@
             let s = localStorage.getItem('sevillalife_save');
             if (s) { 
                 player = JSON.parse(s);
-                // Si la partida guardada no tiene nombre válido, forzamos limpiar para ver el registro
                 if (!player.name) {
                     resetGame();
                     return;
