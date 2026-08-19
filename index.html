@@ -132,13 +132,16 @@
             player.age = 0;
             player.logs = ["Has nacido en Sevilla. ¡Bienvenido al mundo!"];
             
+            saveGame(); // Guardamos inmediatamente al crear el personaje
+            
             document.getElementById('start-screen').style.display = 'none';
             updateUI();
             renderLogs();
-            saveGame(); // Guardamos al instante nada más nacer para que no se pierda al recargar con 0 años
         }
 
-        function saveGame() { localStorage.setItem('sevillalife_save', JSON.stringify(player)); }
+        function saveGame() { 
+            localStorage.setItem('sevillalife_save', JSON.stringify(player)); 
+        }
 
         function updateUI() {
             document.getElementById('player-name').innerText = player.name;
@@ -156,7 +159,6 @@
         function nextYear() {
             player.age++;
             addLog(`Has cumplido ${player.age} años.`);
-            saveGame();
         }
 
         function study() {
@@ -187,17 +189,17 @@
             if (s) { 
                 try {
                     player = JSON.parse(s);
-                    if (!player.name || player.name.trim() === "") {
-                        localStorage.removeItem('sevillalife_save');
+                    if (player.name && player.name.trim() !== "") {
+                        document.getElementById('start-screen').style.display = 'none'; 
+                        updateUI(); 
+                        renderLogs(); 
                         return;
                     }
-                    document.getElementById('start-screen').style.display = 'none'; 
-                    updateUI(); 
-                    renderLogs(); 
                 } catch(e) {
-                    localStorage.removeItem('sevillalife_save');
+                    // Si hay error al parsear, limpiamos
                 }
             }
+            localStorage.removeItem('sevillalife_save');
         };
     </script>
 </body>
