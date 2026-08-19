@@ -140,30 +140,39 @@
 
         function study() {
             if (player.age < 6) {
-                addLog("Eres demasiado pequeño para el colegio. ¡A disfrutar jugando por el barrio!");
+                addLog(`Eres un bebé. Podrás empezar Primaria a los 6 años. Te faltan ${6 - player.age} años.`);
                 return;
             }
             
             if (player.education === "Ninguna" && player.age >= 6) {
                 player.education = "Primaria";
                 player.happiness += 5;
-                addLog("Has empezado el colegio de Primaria. ¡A cargar con la mochila todos los días!");
-            } else if (player.education === "Primaria" && player.age >= 12) {
+                addLog("Has empezado el colegio de Primaria. ¡A cargar con la mochila!");
+            } 
+            else if (player.education === "Primaria" && player.age >= 12) {
                 player.education = "Secundaria (ESO)";
                 player.happiness += 5;
                 addLog("Te has matriculado en el instituto para cursar la ESO.");
-            } else if (player.education === "Secundaria (ESO)" && player.age >= 18) {
+            } 
+            else if (player.education === "Secundaria (ESO)" && player.age >= 18) {
                 if (player.money >= 900) {
                     player.money -= 900;
                     player.education = "Universidad (US)";
                     player.happiness += 10;
-                    addLog("¡A la Universidad de Sevilla! Te has matriculado pagando 900€ de tasas.");
+                    addLog("¡A la Universidad de Sevilla! Has pagado 900€ de matrícula.");
                 } else {
-                    addLog("No te llega el dinero para pagar la matrícula de la Universidad de Sevilla (900€).");
+                    addLog("Necesitas 900€ para pagar la matrícula de la Universidad de Sevilla.");
                     return;
                 }
-            } else {
-                addLog("Ya estás cursando tus estudios o no tienes la edad suficiente para el siguiente nivel.");
+            } 
+            else {
+                if (player.education === "Primaria" && player.age < 12) {
+                    addLog(`Estás en Primaria. Podrás pasar a Secundaria a los 12 años. Te faltan ${12 - player.age} años.`);
+                } else if (player.education === "Secundaria (ESO)" && player.age < 18) {
+                    addLog(`Estás en el instituto. Podrás ir a la Universidad a los 18 años. Te faltan ${18 - player.age} años.`);
+                } else {
+                    addLog("Ya has completado tu formación académica.");
+                }
                 return;
             }
             updateUI();
@@ -172,7 +181,7 @@
 
         function applyJob() {
             if (player.age < 16) {
-                addLog("¡Ilegalidad laboral! En España está prohibido trabajar siendo menor de 16 años.");
+                addLog(`¡Ilegalidad laboral! No puedes trabajar hasta los 16 años. Te faltan ${16 - player.age} años.`);
                 return;
             }
 
@@ -184,15 +193,15 @@
             if (player.education.includes("Universidad")) {
                 player.job = "Técnico Junior";
                 player.salary = 21000;
-                addLog("¡Enhorabuena! Has encontrado un puesto cualificado en una empresa sevillana. Sueldo bruto anual: 21.000€.");
+                addLog("¡Enhorabuena! Has encontrado un puesto cualificado en Sevilla. Sueldo: 21.000€/año.");
             } else if (player.education.includes("Secundaria")) {
                 player.job = "Camarero / Dependiente";
                 player.salary = 14000;
-                addLog("Has conseguido un empleo en el sector servicios. Sueldo bruto anual: 14.000€.");
+                addLog("Has conseguido un empleo en el sector servicios. Sueldo: 14.000€/año.");
             } else {
                 player.job = "Operario / Repartidor";
                 player.salary = 12000;
-                addLog("Has encontrado un empleo sin cualificación previa. Sueldo bruto anual: 12.000€.");
+                addLog("Has encontrado un empleo sin cualificación previa. Sueldo: 12.000€/año.");
             }
             updateUI();
             saveGame();
