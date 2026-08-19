@@ -97,21 +97,14 @@
             cursor: pointer; transition: background 0.2s, color 0.2s;
         }
         .reset-btn:hover { background: #e74c3c; color: white; }
+
+        /* AVISO DE COPYRIGHT VISIBLE EN PANTALLA */
+        .footer-copyright {
+            text-align: center; font-size: 0.7em; color: #95a5a6; padding-top: 4px;
+        }
     </style>
 </head>
 <body>
-    <!-- 
-      =================================================================
-      AVISO DE COPYRIGHT Y PROPIEDAD INTELECTUAL
-      =================================================================
-      Autor y Propietario: Frank (Seville, 2026)
-      Proyecto: Sevillalife
-      Todos los derechos reservados. Queda terminantemente prohibida 
-      la reproducción, distribución, comercialización o modificación total 
-      o parcial de este código fuente sin la autorización expresa del autor.
-      =================================================================
-    -->
-
     <div id="game-container">
         <!-- PANTALLA DE REGISTRO -->
         <div id="start-screen">
@@ -155,11 +148,11 @@
                 <button class="action-btn" onclick="searchJob()">Buscar trabajo</button>
             </div>
             <button class="reset-btn" onclick="resetGame()">Reiniciar partida</button>
+            <div class="footer-copyright">© 2026 Frank. Todos los derechos reservados.</div>
         </div>
     </div>
     
     <script>
-        // Propietario del software: Frank (2026) - Todos los derechos reservados
         let player = { name: "", dni: "", age: 0, health: 100, happiness: 100, studies: "Ninguno", job: "En paro", logs: [] };
 
         function generateDNI() {
