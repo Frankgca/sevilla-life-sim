@@ -34,12 +34,18 @@
         input { 
             width: 100%; padding: 8px; margin-top: 3px; 
             border: 2px solid #ecf0f1; border-radius: 8px; font-size: 0.9em; 
-            outline: none; background: #fff;
+            outline: none; background: #fff; color: #2c3e50;
         }
         input:focus { border-color: #E5A54A; }
 
         .start-btn { width: 100%; margin-top: 14px; padding: 10px; background: #C0392B; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 0.95em; cursor: pointer; }
-        .import-start-btn { width: 100%; margin-top: 6px; padding: 8px; background: #fdf8f0; color: #C0392B; border: 2px dashed #E5A54A; border-radius: 8px; font-weight: bold; font-size: 0.8em; cursor: pointer; }
+        
+        .reset-btn { 
+            background: #fff; color: #c0392b; border: 2px solid #e74c3c; 
+            padding: 5px; border-radius: 6px; font-size: 0.7em; font-weight: 700; 
+            cursor: pointer; transition: background 0.2s, color 0.2s; text-align: center; width: 100%;
+        }
+        .reset-btn:hover { background: #e74c3c; color: white; }
 
         /* PANTALLA DE JUEGO */
         header { 
@@ -101,21 +107,32 @@
             transition: opacity 0.2s ease, transform 0.1s ease;
         }
         .action-btn:active { transform: scale(0.98); opacity: 0.9; }
-        
-        .bottom-buttons { display: flex; gap: 5px; }
-        .secondary-btn { 
-            flex: 1; background: #fdf8f0; color: #C0392B; border: 1px solid #E5A54A; 
-            padding: 5px; border-radius: 6px; font-size: 0.65em; font-weight: 700; 
-            cursor: pointer; transition: background 0.2s;
-        }
-        .secondary-btn:hover { background: #faebd7; }
 
-        .reset-btn { 
-            background: #fff; color: #c0392b; border: 2px solid #e74c3c; 
-            padding: 4px; border-radius: 6px; font-size: 0.65em; font-weight: 700; 
-            cursor: pointer; transition: background 0.2s, color 0.2s;
+        /* MODAL PERSONALIZADO UNIFICADO */
+        #custom-modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(44, 62, 80, 0.7); z-index: 200;
+            display: none; justify-content: center; align-items: center; padding: 20px;
         }
-        .reset-btn:hover { background: #e74c3c; color: white; }
+        .modal-card {
+            background: white; width: 100%; max-width: 360px; padding: 18px;
+            border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-top: 5px solid #E5A54A; display: flex; flex-direction: column; gap: 10px;
+        }
+        .modal-title { font-family: 'Montserrat', sans-serif; font-size: 1.1em; font-weight: 800; color: #C0392B; text-align: center; }
+        .modal-message { font-size: 0.8em; color: #2c3e50; text-align: center; line-height: 1.4; }
+        .modal-input { 
+            width: 100%; padding: 8px; border: 2px solid #ecf0f1; border-radius: 8px; 
+            font-size: 0.8em; outline: none; background: #fff; color: #2c3e50; resize: none;
+        }
+        .modal-input:focus { border-color: #E5A54A; }
+        .modal-buttons { display: flex; gap: 6px; margin-top: 4px; }
+        .modal-btn { 
+            flex: 1; padding: 8px; border: none; border-radius: 8px; 
+            font-weight: bold; font-size: 0.8em; cursor: pointer; text-align: center; 
+        }
+        .modal-btn-confirm { background: #C0392B; color: white; }
+        .modal-btn-cancel { background: #ecf0f1; color: #555; }
 
         /* COPYRIGHT */
         .footer-copyright {
@@ -144,7 +161,7 @@
                 <label>Primer Apellido</label><input type="text" id="surname1-input" maxlength="15" placeholder="García">
                 <label>Segundo Apellido</label><input type="text" id="surname2-input" maxlength="15" placeholder="Sevillano">
                 <button class="start-btn" onclick="startGame()">Comenzar mi historia</button>
-                <button class="import-start-btn" onclick="importGame()">Importar código de partida</button>
+                <button class="reset-btn" style="margin-top: 8px;" onclick="openSaveCodeModal()">Código de Partida (Cargar / Exportar)</button>
             </div>
             <div class="start-copyright">© 2026 Frank. Todos los derechos reservados.</div>
         </div>
@@ -177,12 +194,21 @@
             <div class="action-row">
                 <button class="action-btn" onclick="searchJob()">Buscar trabajo</button>
             </div>
-            <div class="bottom-buttons">
-                <button class="secondary-btn" onclick="exportGame()">Exportar partida</button>
-                <button class="secondary-btn" onclick="importGame()">Importar código</button>
-            </div>
-            <button class="reset-btn" onclick="resetGame()">Reiniciar partida</button>
+            <button class="reset-btn" onclick="openSaveCodeModal()">Código de Partida (Cargar / Exportar)</button>
+            <button class="reset-btn" onclick="confirmResetGame()">Reiniciar partida</button>
             <div class="footer-copyright">© 2026 Frank. Todos los derechos reservados.</div>
+        </div>
+
+        <!-- VENTANA MODAL PERSONALIZADA -->
+        <div id="custom-modal">
+            <div class="modal-card">
+                <div class="modal-title" id="modal-title-text">Aviso</div>
+                <div class="modal-message" id="modal-msg-text">Mensaje aquí</div>
+                <textarea id="modal-textarea" class="modal-input" rows="3" style="display:none;"></textarea>
+                <div class="modal-buttons" id="modal-buttons-container">
+                    <!-- Los botones se inyectan por JS según el tipo -->
+                </div>
+            </div>
         </div>
     </div>
     
@@ -197,11 +223,99 @@
 
         function saveGame() { localStorage.setItem('sevillalife_save', JSON.stringify(player)); }
 
+        // SISTEMA DE VENTANAS MODALES PERSONALIZADAS
+        function showModalAlert(title, message, callback) {
+            const modal = document.getElementById('custom-modal');
+            document.getElementById('modal-title-text').innerText = title;
+            document.getElementById('modal-msg-text').innerText = message;
+            document.getElementById('modal-textarea').style.display = 'none';
+            
+            const btnContainer = document.getElementById('modal-buttons-container');
+            btnContainer.innerHTML = `<button class="modal-btn modal-btn-confirm" id="modal-ok-btn">Aceptar</button>`;
+            
+            modal.style.display = 'flex';
+            
+            document.getElementById('modal-ok-btn').onclick = () => {
+                modal.style.display = 'none';
+                if (callback) callback();
+            };
+        }
+
+        function showModalConfirm(title, message, onConfirm) {
+            const modal = document.getElementById('custom-modal');
+            document.getElementById('modal-title-text').innerText = title;
+            document.getElementById('modal-msg-text').innerText = message;
+            document.getElementById('modal-textarea').style.display = 'none';
+            
+            const btnContainer = document.getElementById('modal-buttons-container');
+            btnContainer.innerHTML = `
+                <button class="modal-btn modal-btn-cancel" id="modal-cancel-btn">Cancelar</button>
+                <button class="modal-btn modal-btn-confirm" id="modal-yes-btn">Aceptar</button>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            document.getElementById('modal-cancel-btn').onclick = () => { modal.style.display = 'none'; };
+            document.getElementById('modal-yes-btn').onclick = () => {
+                modal.style.display = 'none';
+                onConfirm();
+            };
+        }
+
+        function openSaveCodeModal() {
+            const modal = document.getElementById('custom-modal');
+            document.getElementById('modal-title-text').innerText = "Código de Partida";
+            document.getElementById('modal-msg-text').innerText = "Copia tu código para exportarlo, o pega uno nuevo para importarlo:";
+            
+            let currentCode = "";
+            if (player.name !== "") {
+                currentCode = btoa(encodeURIComponent(JSON.stringify(player)));
+            }
+            
+            const textarea = document.getElementById('modal-textarea');
+            textarea.style.display = 'block';
+            textarea.value = currentCode;
+            
+            const btnContainer = document.getElementById('modal-buttons-container');
+            btnContainer.innerHTML = `
+                <button class="modal-btn modal-btn-cancel" id="modal-close-code">Cerrar</button>
+                <button class="modal-btn modal-btn-confirm" id="modal-load-code">Cargar Código</button>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            document.getElementById('modal-close-code').onclick = () => { modal.style.display = 'none'; };
+            document.getElementById('modal-load-code').onclick = () => {
+                let code = textarea.value.trim();
+                modal.style.display = 'none';
+                if (code !== "") {
+                    try {
+                        let decodedData = JSON.parse(decodeURIComponent(atob(code)));
+                        if (decodedData && decodedData.name && typeof decodedData.age !== 'undefined') {
+                            player = decodedData;
+                            saveGame();
+                            document.getElementById('start-screen').style.display = 'none';
+                            updateUI();
+                            renderLogs();
+                            showModalAlert("¡Éxito!", "Partida cargada correctamente, mi arma.");
+                        } else {
+                            showModalAlert("Error", "El código no es válido.");
+                        }
+                    } catch (e) {
+                        showModalAlert("Error", "El código está corrupto o mal copiado.");
+                    }
+                }
+            };
+        }
+
         function startGame() {
             let n = document.getElementById('name-input').value.trim();
             let s1 = document.getElementById('surname1-input').value.trim();
             let s2 = document.getElementById('surname2-input').value.trim();
-            if (n === "" || s1 === "" || s2 === "") return alert("¡Rellena todo, mi arma!");
+            if (n === "" || s1 === "" || s2 === "") {
+                showModalAlert("Faltan datos", "¡Rellena todo, mi arma!");
+                return;
+            }
             player.name = `${n} ${s1} ${s2}`;
             player.dni = generateDNI();
             player.age = 0;
@@ -212,35 +326,6 @@
             document.getElementById('start-screen').style.display = 'none';
             updateUI();
             renderLogs();
-        }
-
-        function exportGame() {
-            let dataStr = btoa(encodeURIComponent(JSON.stringify(player)));
-            let userCode = prompt("Copia este código de tu partida para llevarlo a otro dispositivo:", dataStr);
-            if (userCode !== null) {
-                // Opcional por si quiere re-copiarlo
-            }
-        }
-
-        function importGame() {
-            let code = prompt("Pega aquí el código de tu partida:");
-            if (code && code.trim() !== "") {
-                try {
-                    let decodedData = JSON.parse(decodeURIComponent(atob(code.trim())));
-                    if (decodedData && decodedData.name && typeof decodedData.age !== 'undefined') {
-                        player = decodedData;
-                        saveGame();
-                        document.getElementById('start-screen').style.display = 'none';
-                        updateUI();
-                        renderLogs();
-                        alert("¡Partida cargada con éxito, mi arma!");
-                    } else {
-                        alert("El código no es válido.");
-                    }
-                } catch (e) {
-                    alert("El código está corrupto o mal copiado.");
-                }
-            }
         }
 
         function updateUI() {
@@ -333,11 +418,11 @@
             saveGame();
         }
 
-        function resetGame() {
-            if (confirm("¿Seguro que quieres reiniciar la partida?")) {
+        function confirmResetGame() {
+            showModalConfirm("Reiniciar partida", "¿Seguro que quieres borrar todo y reiniciar la partida?", () => {
                 localStorage.removeItem('sevillalife_save'); 
                 location.reload();
-            }
+            });
         }
 
         window.onload = () => {
