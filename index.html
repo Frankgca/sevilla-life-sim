@@ -151,7 +151,7 @@
 </head>
 <body>
     <div id="game-container">
-        <!-- PANTALLA DE REGISTRO ORIGINAL CON 3 CAMPOS -->
+        <!-- PANTALLA DE REGISTRO CON 3 CAMPOS -->
         <div id="start-screen">
             <div class="form-card">
                 <h1>Sevillalife</h1>
@@ -161,7 +161,7 @@
                 <label>Primer Apellido</label><input type="text" id="surname1-input" maxlength="15" placeholder="García">
                 <label>Segundo Apellido</label><input type="text" id="surname2-input" maxlength="15" placeholder="Sevillano">
                 <button class="start-btn" onclick="startGame()">Comenzar mi historia</button>
-                <button class="reset-btn" style="margin-top: 8px;" onclick="openSaveCodeModal()">Código de Partida (Cargar / Exportar)</button>
+                <button class="reset-btn" style="margin-top: 8px;" onclick="openManagerModal()">Gestión de Partida (Cargar / Copiar)</button>
             </div>
             <div class="start-copyright">© 2026 Frank. Todos los derechos reservados.</div>
         </div>
@@ -194,7 +194,7 @@
             <div class="action-row">
                 <button class="action-btn" onclick="searchJob()">Buscar trabajo</button>
             </div>
-            <button class="reset-btn" onclick="openSaveCodeModal()">Código de Partida (Cargar / Exportar)</button>
+            <button class="reset-btn" onclick="openManagerModal()">Gestión de Partida (Cargar / Copiar)</button>
             <button class="reset-btn" onclick="confirmResetGame()">Reiniciar partida</button>
             <div class="footer-copyright">© 2026 Frank. Todos los derechos reservados.</div>
         </div>
@@ -259,60 +259,89 @@
             };
         }
 
-        function openSaveCodeModal() {
+        // Menú para elegir entre Copiar Automáticamente o Pegar para Cargar
+        function openManagerModal() {
             const modal = document.getElementById('custom-modal');
-            document.getElementById('modal-title-text').innerText = "Código de Partida";
-            document.getElementById('modal-msg-text').innerText = "Copia tu código para exportarlo, o pega uno nuevo para importarlo:";
-            
-            let currentCode = "";
-            if (player.name !== "") {
-                // Exportación compacta en array: [nombre, dni, edad, salud, felicidad, estudios, trabajo]
-                let exportData = [player.name, player.dni, player.age, player.health, player.happiness, player.studies, player.job];
-                currentCode = btoa(encodeURIComponent(JSON.stringify(exportData)));
-            }
-            
-            const textarea = document.getElementById('modal-textarea');
-            textarea.style.display = 'block';
-            textarea.value = currentCode;
+            document.getElementById('modal-title-text').innerText = "Gestión de Partida";
+            document.getElementById('modal-msg-text').innerText = "¿Qué deseas hacer con el código de tu partida?";
+            document.getElementById('modal-textarea').style.display = 'none';
             
             const btnContainer = document.getElementById('modal-buttons-container');
             btnContainer.innerHTML = `
-                <button class="modal-btn modal-btn-cancel" id="modal-close-code">Cerrar</button>
-                <button class="modal-btn modal-btn-confirm" id="modal-load-code">Cargar Código</button>
+                <button class="modal-btn modal-btn-cancel" id="modal-close-mgr">Cerrar</button>
+                <button class="modal-btn modal-btn-confirm" id="modal-go-copy" style="background:#27ae60;">Copiar Código</button>
+                <button class="modal-btn modal-btn-confirm" id="modal-go-load">Cargar Código</button>
             `;
             
             modal.style.display = 'flex';
             
-            document.getElementById('modal-close-code').onclick = () => { modal.style.display = 'none'; };
-            document.getElementById('modal-load-code').onclick = () => {
-                let code = textarea.value.trim();
+            document.getElementById('modal-close-mgr').onclick = () => { modal.style.display = 'none'; };
+            
+            // ACCIÓN 1: Copiar directamente al portapapeles con un solo toque
+            document.getElementById('modal-go-copy').onclick = () => {
                 modal.style.display = 'none';
-                if (code !== "") {
-                    try {
-                        let decodedData = JSON.parse(decodeURIComponent(atob(code)));
-                        if (Array.isArray(decodedData) && decodedData.length >= 7) {
-                            player = {
-                                name: decodedData[0],
-                                dni: decodedData[1],
-                                age: decodedData[2],
-                                health: decodedData[3],
-                                happiness: decodedData[4],
-                                studies: decodedData[5],
-                                job: decodedData[6],
-                                logs: [`Partida importada en el año ${decodedData[2]}. ¡Continuamos la historia!`]
-                            };
-                            saveGame();
-                            document.getElementById('start-screen').style.display = 'none';
-                            updateUI();
-                            renderLogs();
-                            showModalAlert("¡Todo en orden!", "Ya tienes los papeles en regla.");
-                        } else {
-                            showModalAlert("Error", "El código no es válido.");
-                        }
-                    } catch (e) {
-                        showModalAlert("Error", "El código está corrupto o mal copiado.");
-                    }
+                if (player.name === "") {
+                    showModalAlert("Aviso", "Aún no hay ninguna partida activa para copiar.");
+                    return;
                 }
+                let exportData = [player.name, player.dni, player.age, player.health, player.happiness, player.studies, player.job];
+                let currentCode = btoa(encodeURIComponent(JSON.stringify(exportData)));
+                
+                navigator.clipboard.writeText(currentCode).then(() => {
+                    showModalAlert("¡Copiado!", "El código de tu partida se ha copiado automáticamente al portapapeles. ¡Listo para pegar!");
+                }).catch(() => {
+                    // Fallback por si el navegador bloquea el portapapeles directo
+                    prompt("Copia tu código de partida manualmente:", currentCode);
+                });
+            };
+
+            // ACCIÓN 2: Abrir cuadro de texto para pegar y cargar una partida
+            document.getElementById('modal-go-load').onclick = () => {
+                document.getElementById('modal-title-text').innerText = "Cargar Partida";
+                document.getElementById('modal-msg-text').innerText = "Pega aquí abajo el código de tu partida:";
+                
+                const textarea = document.getElementById('modal-textarea');
+                textarea.style.display = 'block';
+                textarea.value = "";
+                
+                btnContainer.innerHTML = `
+                    <button class="modal-btn modal-btn-cancel" id="modal-close-load">Cancelar</button>
+                    <button class="modal-btn modal-btn-confirm" id="modal-execute-load" style="background:#27ae60;">Cargar</button>
+                `;
+                
+                setTimeout(() => textarea.focus(), 50);
+
+                document.getElementById('modal-close-load').onclick = () => { modal.style.display = 'none'; };
+                document.getElementById('modal-execute-load').onclick = () => {
+                    let code = textarea.value.trim();
+                    modal.style.display = 'none';
+                    if (code !== "") {
+                        try {
+                            let decodedData = JSON.parse(decodeURIComponent(atob(code)));
+                            if (Array.isArray(decodedData) && decodedData.length >= 7) {
+                                player = {
+                                    name: decodedData[0],
+                                    dni: decodedData[1],
+                                    age: decodedData[2],
+                                    health: decodedData[3],
+                                    happiness: decodedData[4],
+                                    studies: decodedData[5],
+                                    job: decodedData[6],
+                                    logs: [`Partida importada en el año ${decodedData[2]}. ¡Continuamos la historia!`]
+                                };
+                                saveGame();
+                                document.getElementById('start-screen').style.display = 'none';
+                                updateUI();
+                                renderLogs();
+                                showModalAlert("¡Todo en orden!", "Ya tienes los papeles en regla.");
+                            } else {
+                                showModalAlert("Error", "El código no es válido.");
+                            }
+                        } catch (e) {
+                            showModalAlert("Error", "El código está corrupto o mal copiado.");
+                        }
+                    }
+                };
             };
         }
 
