@@ -37,6 +37,7 @@
         .action-btn { flex: 1; padding: 12px; background-color: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         footer { padding: 15px; background: white; border-top: 1px solid #dfe6e9; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; }
         #age-btn { width: 100%; padding: 14px; background-color: #27ae60; color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer; }
+        .reset-btn { background: none; border: none; color: #e74c3c; font-size: 0.8em; cursor: pointer; text-align: center; text-decoration: underline; margin-top: 4px; }
         .copyright { font-size: 0.7em; text-align: center; color: #7f8c8d; margin-top: 4px; }
     </style>
 </head>
@@ -72,6 +73,7 @@
 
         <footer>
             <button id="age-btn" onclick="ageUp()">+ 1 Año</button>
+            <button class="reset-btn" onclick="resetGame()">Reiniciar partida</button>
             <div class="copyright">&copy; 2026 Código Albero. Todos los derechos reservados.</div>
         </footer>
     </div>
@@ -205,6 +207,13 @@
             }
             updateUI();
             saveGame();
+        }
+
+        function resetGame() {
+            if (confirm("¿Seguro que quieres borrar la partida y empezar una nueva vida desde cero?")) {
+                localStorage.removeItem('sevillalife_save');
+                location.reload();
+            }
         }
     </script>
 </body>
