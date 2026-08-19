@@ -2,42 +2,44 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sevillalife</title>
     <style>
-        body { margin: 0; padding: 0; font-family: sans-serif; background-color: #f4f4f4; height: 100vh; display: flex; flex-direction: column; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background-color: #f4f4f4; font-family: sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* Pantalla Inicio */
-        #start-screen { padding: 20px; text-align: center; }
+        /* Pantalla Inicio con diseño de tarjeta */
+        #start-screen { padding: 20px; display: flex; justify-content: center; align-items: center; height: 100%; }
+        .form-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid #E5A54A; width: 100%; max-width: 400px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #ecf0f1; border-radius: 10px; font-size: 1em; }
         
-        /* Juego */
+        /* Pantalla Juego */
         #main-ui { display: none; flex-direction: column; height: 100%; }
-        header { background: #C0392B; color: white; padding: 15px; text-align: center; }
+        header { background: #C0392B; color: white; padding: 15px; text-align: center; flex-shrink: 0; }
         #event-log { flex: 1; padding: 15px; overflow-y: auto; }
-        .log-entry { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .log-entry { background: white; padding: 12px; margin-bottom: 8px; border-radius: 8px; border-left: 4px solid #2980B9; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         
-        /* Botones abajo */
-        .controls { padding: 15px; background: white; border-top: 1px solid #ccc; }
-        button { width: 100%; padding: 15px; margin-bottom: 10px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
+        .controls { padding: 15px; background: white; border-top: 1px solid #ccc; flex-shrink: 0; }
+        button { width: 100%; padding: 14px; margin-top: 5px; cursor: pointer; border-radius: 8px; border: none; font-weight: bold; color: white; }
     </style>
 </head>
 <body>
 
-    <!-- Pantalla Registro -->
     <div id="start-screen">
-        <h1>Alta en el Padrón</h1>
-        <input type="text" id="name-input" placeholder="Nombre" style="width:100%; padding:10px; margin:5px 0;">
-        <input type="text" id="surname1-input" placeholder="1er Apellido" style="width:100%; padding:10px; margin:5px 0;">
-        <input type="text" id="surname2-input" placeholder="2do Apellido" style="width:100%; padding:10px; margin:5px 0;">
-        <p style="font-size:0.8em; color:#666;">* No es necesario nombre real.</p>
-        <button onclick="startGame()" style="background:#27ae60;">Comenzar</button>
+        <div class="form-card">
+            <h1>Alta en el Padrón</h1>
+            <input type="text" id="name-input" placeholder="Nombre">
+            <input type="text" id="surname1-input" placeholder="1er Apellido">
+            <input type="text" id="surname2-input" placeholder="2do Apellido">
+            <p style="font-size:0.75em; color:#95a5a6; font-style:italic;">* Datos no reales permitidos.</p>
+            <button onclick="startGame()" style="background:#C0392B;">Comenzar mi historia</button>
+        </div>
     </div>
 
-    <!-- Pantalla Juego -->
     <div id="main-ui">
         <header>
             <h2 id="display-name" style="margin:0;">---</h2>
-            <div id="display-dni" style="font-size:0.9em;">---</div>
+            <div id="display-dni" style="font-size:0.8em; opacity:0.9;">---</div>
         </header>
         <div id="event-log"></div>
         <div class="controls">
@@ -57,6 +59,12 @@
             }
         };
 
+        function generateDNI() {
+            const num = Math.floor(10000000 + Math.random() * 90000000);
+            const letter = "TRWAGMYFPDXBNJZSQVHLCKE"[num % 23];
+            return num + letter;
+        }
+
         function startGame() {
             const n = document.getElementById('name-input').value.trim();
             const s1 = document.getElementById('surname1-input').value.trim();
@@ -64,14 +72,15 @@
             if (!n || !s1 || !s2) return alert("Rellena todo, mi arma.");
             
             player.name = `${n} ${s1} ${s2}`;
-            player.dni = Math.floor(Math.random()*100000000) + "TRWAGMYFPDXBNJZSQVHLCKE"[Math.floor(Math.random()*23)];
+            player.dni = generateDNI();
             player.logs = ["Has empezado tu vida en Sevilla."];
-            
             saveAndRefresh();
         }
 
         function saveAndRefresh() {
             localStorage.setItem('sevillalife_data', JSON.stringify(player));
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('main-ui').style.display = 'flex';
             renderGame();
         }
 
@@ -79,7 +88,7 @@
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('main-ui').style.display = 'flex';
             document.getElementById('display-name').innerText = player.name;
-            document.getElementById('display-dni').innerText = player.dni;
+            document.getElementById('display-dni').innerText = "DNI: " + player.dni;
             document.getElementById('event-log').innerHTML = player.logs.map(l => `<div class="log-entry">${l}</div>`).join('');
         }
 
