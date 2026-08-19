@@ -27,7 +27,17 @@
         h1 { color: #C0392B; font-family: 'Montserrat', sans-serif; font-size: 2em; font-weight: 800; margin-bottom: 5px; text-align: center; letter-spacing: -0.5px; }
         .subtitle { color: #7f8c8d; font-size: 0.9em; margin-bottom: 25px; text-align: center; }
         label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.85em; color: #2c3e50; }
-        input { width: 100%; padding: 12px; margin-top: 6px; border: 2px solid #ecf0f1; border-radius: 10px; font-size: 1em; }
+        
+        /* INPUTS CON EL ENFOQUE EN COLOR ALBERO */
+        input { 
+            width: 100%; padding: 12px; margin-top: 6px; 
+            border: 2px solid #ecf0f1; border-radius: 10px; font-size: 1em; 
+            outline: none; background: #fff;
+        }
+        input:focus { 
+            border-color: #E5A54A; 
+        }
+
         .start-btn { width: 100%; margin-top: 25px; padding: 14px; background: #C0392B; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1em; cursor: pointer; }
 
         /* PANTALLA DE JUEGO */
@@ -37,7 +47,6 @@
         }
         #player-name { font-family: 'Montserrat', sans-serif; font-size: 1.35em; font-weight: 800; margin-bottom: 6px; color: #C0392B; }
         
-        /* CÁPSULA DNI CON EL MISMO ESTILO QUE LAS ESTADÍSTICAS */
         #player-dni { 
             font-size: 0.75em; display: inline-block; padding: 3px 10px; border-radius: 12px; 
             color: #555; font-family: monospace; letter-spacing: 0.5px; margin-bottom: 10px;
@@ -57,7 +66,6 @@
             font-size: 0.95em; color: #333333; border-left: 4px solid #E5A54A; border-top: 1px solid #f1f1f1; 
         }
         
-        /* BOTONES CON TEXTO DEL COLOR DEL NOMBRE */
         #actions-panel { padding: 16px; background: white; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 10px; }
         .action-row { display: flex; gap: 10px; }
         .action-btn { 
@@ -68,8 +76,21 @@
         }
         .action-btn:active { background: #E5A54A; color: white; transform: scale(0.98); }
         
-        .reset-btn { background: #f8f9fa; color: #888; border: 1px solid #ddd; padding: 10px; border-radius: 8px; font-size: 0.8em; font-weight: 600; cursor: pointer; }
-        .reset-btn:hover { background: #e74c3c; color: white; border-color: #e74c3c; }
+        .reset-btn { 
+            background: #fff; 
+            color: #c0392b; 
+            border: 2px solid #e74c3c; 
+            padding: 10px; 
+            border-radius: 8px; 
+            font-size: 0.85em; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: background 0.2s, color 0.2s;
+        }
+        .reset-btn:hover { 
+            background: #e74c3c; 
+            color: white; 
+        }
     </style>
 </head>
 <body>
@@ -127,7 +148,7 @@
             if (n === "" || s1 === "" || s2 === "") return alert("¡Rellena todo, mi arma!");
             player.name = `${n} ${s1} ${s2}`;
             player.dni = generateDNI();
-            player.logs = ["Has nacido en Sevilla. ¡Bienvenido al mundo!"];
+            player.logs = ["Has nacido en Sevilla. ¡Bienvenidos al mundo!"];
             saveGame();
             document.getElementById('start-screen').style.display = 'none';
             updateUI();
