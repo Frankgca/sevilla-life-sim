@@ -27,7 +27,6 @@
         h1 { color: #C0392B; font-family: 'Montserrat', sans-serif; font-size: 2em; font-weight: 800; margin-bottom: 5px; text-align: center; letter-spacing: -0.5px; }
         .subtitle { color: #7f8c8d; font-size: 0.9em; margin-bottom: 5px; text-align: center; }
         
-        /* ESTILO PARA EL AVISO DE DATOS REALES */
         .disclaimer { color: #95a5a6; font-size: 0.75em; text-align: center; margin-bottom: 20px; font-style: italic; }
         
         label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.85em; color: #2c3e50; }
@@ -82,7 +81,6 @@
             font-size: 0.95em; color: #333333; border-left: 4px solid #E5A54A; border-top: 1px solid #f1f1f1; 
         }
         
-        /* BOTONES CON EL ESTILO SÓLIDO DE LA PANTALLA DE REGISTRO */
         #actions-panel { padding: 16px; background: white; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 10px; }
         .action-row { display: flex; gap: 10px; }
         .action-btn { 
@@ -102,8 +100,20 @@
     </style>
 </head>
 <body>
+    <!-- 
+      =================================================================
+      AVISO DE COPYRIGHT Y PROPIEDAD INTELECTUAL
+      =================================================================
+      Autor y Propietario: Frank (Seville, 2026)
+      Proyecto: Sevillalife
+      Todos los derechos reservados. Queda terminantemente prohibida 
+      la reproducción, distribución, comercialización o modificación total 
+      o parcial de este código fuente sin la autorización expresa del autor.
+      =================================================================
+    -->
+
     <div id="game-container">
-        <!-- PANTALLA DE REGISTRO CON SUBTÍTULO FORMAL Y AVISO -->
+        <!-- PANTALLA DE REGISTRO -->
         <div id="start-screen">
             <div class="form-card">
                 <h1>Sevillalife</h1>
@@ -149,6 +159,7 @@
     </div>
     
     <script>
+        // Propietario del software: Frank (2026) - Todos los derechos reservados
         let player = { name: "", dni: "", age: 0, health: 100, happiness: 100, studies: "Ninguno", job: "En paro", logs: [] };
 
         function generateDNI() {
