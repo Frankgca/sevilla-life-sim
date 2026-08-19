@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sevillalife</title>
-    <!-- Importamos la fuente Sevillana desde Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Sevillana&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Importamos Playfair Display desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: #2c3e50; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -25,8 +25,8 @@
             background: white; padding: 25px; border-radius: 20px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid #E5A54A; 
         }
-        /* Aplicamos la fuente Sevillana al título principal del formulario */
-        h1 { color: #C0392B; font-family: 'Sevillana', cursive; font-size: 2.5em; margin-bottom: 5px; text-align: center; }
+        /* Aplicamos Playfair Display al título principal */
+        h1 { color: #C0392B; font-family: 'Playfair Display', serif; font-size: 2.3em; font-weight: 700; margin-bottom: 5px; text-align: center; }
         .subtitle { color: #7f8c8d; font-size: 0.9em; margin-bottom: 25px; text-align: center; }
         
         label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.85em; color: #2c3e50; }
@@ -47,8 +47,8 @@
             background: #C0392B; color: white; padding: 22px 20px 16px 20px; 
             text-align: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
         }
-        /* Aplicamos la fuente Sevillana y un tamaño mayor al nombre del personaje */
-        #player-name { font-family: 'Sevillana', cursive; font-size: 2.2em; margin-bottom: 2px; line-height: 1.1; }
+        /* Aplicamos Playfair Display al nombre del jugador */
+        #player-name { font-family: 'Playfair Display', serif; font-size: 1.6em; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
         #player-dni { font-size: 0.8em; background: rgba(0,0,0,0.25); display: inline-block; padding: 3px 10px; border-radius: 12px; margin-bottom: 12px; font-family: monospace; }
         
         .stats { display: flex; justify-content: space-around; background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; font-size: 0.9em; font-weight: 600; }
@@ -56,7 +56,7 @@
         #event-log { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
         .log-entry { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); color: #333; border-left: 4px solid #E5A54A; }
         
-        /* PANEL DE ACCIONES INFERIOR UNIFICADO */
+        /* PANEL DE ACCIONES INFERIOR */
         #actions-panel { 
             display: flex; flex-direction: column; gap: 8px; padding: 15px; 
             background: white; border-top: 1px solid #eef0f2; flex-shrink: 0; 
