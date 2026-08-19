@@ -118,6 +118,10 @@
             return `${num}${letters.charAt(num % 23)}`;
         }
 
+        function saveGame() { 
+            localStorage.setItem('sevillalife_save', JSON.stringify(player)); 
+        }
+
         function startGame() {
             let n = document.getElementById('name-input').value.trim();
             let s1 = document.getElementById('surname1-input').value.trim();
@@ -132,15 +136,11 @@
             player.age = 0;
             player.logs = ["Has nacido en Sevilla. ¡Bienvenido al mundo!"];
             
-            saveGame(); // Guardamos inmediatamente al crear el personaje
+            saveGame();
             
             document.getElementById('start-screen').style.display = 'none';
             updateUI();
             renderLogs();
-        }
-
-        function saveGame() { 
-            localStorage.setItem('sevillalife_save', JSON.stringify(player)); 
         }
 
         function updateUI() {
@@ -150,10 +150,21 @@
             document.getElementById('happiness-val').innerText = player.happiness;
         }
 
+        function renderLogs() {
+            const eventLog = document.getElementById('event-log');
+            eventLog.innerHTML = "";
+            player.logs.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'log-entry';
+                div.innerText = msg;
+                eventLog.appendChild(div);
+            });
+            saveGame(); // Nos aseguramos de guardar cada vez que se renderiza el log
+        }
+
         function addLog(text) {
             player.logs.unshift(`[${player.age} años] ${text}`);
             renderLogs(); 
-            saveGame();
         }
 
         function nextYear() {
@@ -188,15 +199,16 @@
             let s = localStorage.getItem('sevillalife_save');
             if (s) { 
                 try {
-                    player = JSON.parse(s);
-                    if (player.name && player.name.trim() !== "") {
+                    let parsed = JSON.parse(s);
+                    if (parsed && parsed.name && parsed.name.trim() !== "") {
+                        player = parsed;
                         document.getElementById('start-screen').style.display = 'none'; 
                         updateUI(); 
                         renderLogs(); 
                         return;
                     }
                 } catch(e) {
-                    // Si hay error al parsear, limpiamos
+                    // Si falla el parseo, limpiamos
                 }
             }
             localStorage.removeItem('sevillalife_save');
