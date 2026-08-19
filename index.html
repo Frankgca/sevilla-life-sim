@@ -3,68 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sevillalife: Edición Giralda (Proyecto: Código Albero)</title>
+    <title>Sevillalife: Registro Civil</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Georgia', serif; }
         body { background-color: #2c3e50; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         
         #game-container { 
-            width: 100%; 
-            max-width: 440px; 
-            background-color: #FDFBF7; 
-            display: flex; 
-            flex-direction: column; 
-            height: 100vh; 
-            position: relative;
-            overflow: hidden;
+            width: 100%; max-width: 440px; background-color: #FDFBF7; 
+            display: flex; flex-direction: column; height: 100vh; position: relative; overflow: hidden;
         }
         
         #start-screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #E5A54A; color: white; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; z-index: 100; padding: 20px; 
+            background: #f4f1ea; color: #2c3e50; z-index: 100; padding: 30px;
+            display: flex; flex-direction: column; justify-content: center;
         }
-        #start-screen input { padding: 15px; width: 90%; border-radius: 8px; border: none; margin-bottom: 20px; font-size: 1.1em; color: #333; }
-        #start-screen button { padding: 15px 30px; background: #C0392B; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .form-box { border: 2px solid #2c3e50; padding: 20px; background: white; box-shadow: 5px 5px 0px rgba(0,0,0,0.1); }
+        h1 { text-align: center; font-size: 1.5em; border-bottom: 2px solid #2c3e50; margin-bottom: 20px; padding-bottom: 10px; text-transform: uppercase; }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.9em; }
+        input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; font-family: sans-serif; }
+        button { width: 100%; margin-top: 20px; padding: 12px; background: #2c3e50; color: white; border: none; cursor: pointer; font-weight: bold; }
 
         header { background: #C0392B; color: white; padding: 15px 20px; text-align: center; flex-shrink: 0; }
-        #game-brand { font-size: 0.8em; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; opacity: 0.9; margin-bottom: 5px; }
+        #game-brand { font-size: 0.8em; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
+        #player-dni { font-size: 0.8em; color: #ecf0f1; margin-top: 5px; font-family: monospace; }
         .stats { display: flex; justify-content: space-around; margin-top: 12px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; font-weight: bold; }
         .stats-extra { display: flex; justify-content: space-around; margin-top: 8px; font-size: 0.85em; color: #fff; }
-        #event-log { flex-grow: 1; padding: 15px; overflow-y: auto; background-color: #FDFBF7; }
-        .log-entry { background-color: white; padding: 12px; margin-bottom: 10px; border-radius: 10px; border-left: 5px solid #2980B9; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        #event-log { flex-grow: 1; padding: 15px; overflow-y: auto; }
+        .log-entry { background-color: white; padding: 12px; margin-bottom: 10px; border-radius: 4px; border-left: 5px solid #2980B9; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         #actions-panel { display: flex; gap: 10px; padding: 12px; background: white; border-top: 2px solid #E5A54A; flex-shrink: 0; }
-        .action-btn { flex: 1; padding: 12px; background-color: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .action-btn { flex: 1; padding: 12px; background-color: #2980B9; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
         footer { padding: 15px; background: white; border-top: 1px solid #dfe6e9; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; }
-        #age-btn { width: 100%; padding: 14px; background-color: #27ae60; color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer; }
-        
-        /* Botón de reinicio forzado */
-        .reset-btn { 
-            width: 100%; 
-            padding: 10px; 
-            background: #e74c3c; 
-            color: white; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-size: 0.9em;
-            display: block;
-        }
-        .copyright { font-size: 0.7em; text-align: center; color: #7f8c8d; margin-top: 4px; }
+        #age-btn { width: 100%; padding: 14px; background-color: #27ae60; color: white; border: none; border-radius: 4px; font-size: 1.1em; font-weight: bold; cursor: pointer; }
+        .reset-btn { width: 100%; padding: 8px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
+        .copyright { font-size: 0.7em; text-align: center; color: #7f8c8d; }
     </style>
 </head>
 <body>
     <div id="game-container">
         <div id="start-screen">
-            <h1>Sevillalife</h1>
-            <p style="margin-bottom: 20px;">¿Cómo se llamará tu personaje?</p>
-            <input type="text" id="name-input" placeholder="Tu nombre..." maxlength="15">
-            <button onclick="startGame()">Comenzar en Sevilla</button>
+            <div class="form-box">
+                <h1>Registro Civil de Sevilla</h1>
+                <label>Nombre:</label>
+                <input type="text" id="name-input" maxlength="15">
+                <label>Primer Apellido:</label>
+                <input type="text" id="surname1-input" maxlength="15">
+                <label>Segundo Apellido:</label>
+                <input type="text" id="surname2-input" maxlength="15">
+                <button onclick="startGame()">Inscribir Nacimiento</button>
+            </div>
         </div>
 
         <header>
-            <div id="game-brand">Sevillalife: Edición Giralda</div>
+            <div id="game-brand">Sevillalife: Registro Oficial</div>
             <h1 id="player-name">Cargando...</h1>
+            <div id="player-dni">Cargando DNI...</div>
             <div class="stats">
                 <div>❤️ <span id="health-val">100</span>%</div>
                 <div>😊 <span id="happiness-val">100</span>%</div>
@@ -86,12 +79,19 @@
         <footer>
             <button id="age-btn" onclick="ageUp()">+ 1 Año</button>
             <button class="reset-btn" onclick="resetGame()">Reiniciar partida</button>
-            <div class="copyright">&copy; 2026 Código Albero. Todos los derechos reservados.</div>
+            <div class="copyright">&copy; 2026 Registro Civil de Sevilla.</div>
         </footer>
     </div>
     
     <script>
-        let player = { name: "", age: 0, health: 100, happiness: 100, money: 0, education: "Ninguna", job: "Desempleado", salary: 0, logs: [], isAlive: true };
+        let player = { name: "", dni: "", age: 0, health: 100, happiness: 100, money: 0, education: "Ninguna", job: "Desempleado", salary: 0, logs: [], isAlive: true };
+
+        function generateDNI() {
+            let num = Math.floor(Math.random() * 100000000);
+            let letters = "TRWAGMYFPDXBNJZSQVHLCKE";
+            let letter = letters.charAt(num % 23);
+            return `${num.toString().padStart(8, '0')}${letter}`;
+        }
 
         window.onload = function() {
             let savedGame = localStorage.getItem('sevillalife_save');
@@ -104,21 +104,25 @@
         };
 
         function startGame() {
-            let input = document.getElementById('name-input');
-            if (input.value.trim() === "") { alert("¡Escribe un nombre, por favor!"); return; }
-            player.name = input.value.trim();
+            let n = document.getElementById('name-input').value.trim();
+            let s1 = document.getElementById('surname1-input').value.trim();
+            let s2 = document.getElementById('surname2-input').value.trim();
+            
+            if (n === "" || s1 === "" || s2 === "") { alert("¡Rellene todos los campos!"); return; }
+            
+            player.name = `${n} ${s1} ${s2}`;
+            player.dni = generateDNI();
             document.getElementById('start-screen').style.display = 'none';
-            addLog("Has nacido en el Hospital Universitario Virgen del Rocío. ¡Bienvenido a Sevilla!");
+            addLog("Inscripción completada. Se le ha asignado el DNI: " + player.dni);
             saveGame();
             updateUI();
         }
 
-        function saveGame() {
-            localStorage.setItem('sevillalife_save', JSON.stringify(player));
-        }
+        function saveGame() { localStorage.setItem('sevillalife_save', JSON.stringify(player)); }
 
         function updateUI() {
-            document.getElementById('player-name').innerText = `${player.name} - ${player.age} años`;
+            document.getElementById('player-name').innerText = `${player.name} (${player.age} años)`;
+            document.getElementById('player-dni').innerText = `DNI: ${player.dni}`;
             document.getElementById('health-val').innerText = player.health;
             document.getElementById('happiness-val').innerText = player.happiness;
             document.getElementById('money-val').innerText = player.money;
@@ -144,7 +148,6 @@
         }
 
         function ageUp() {
-            if (!player.isAlive) return;
             player.age++;
             if (player.salary > 0) player.money += player.salary;
             addLog(`Has cumplido ${player.age} años.`);
@@ -154,75 +157,52 @@
 
         function study() {
             if (player.age < 6) {
-                addLog(`Eres un bebé. Podrás empezar Primaria a los 6 años. Te faltan ${6 - player.age} años.`);
+                addLog(`Eres un niño pequeño, ¡sal a jugar por el barrio! Podrás estudiar Primaria a los 6 años.`);
                 return;
             }
-            
             if (player.education === "Ninguna" && player.age >= 6) {
-                player.education = "Primaria";
-                player.happiness += 5;
-                addLog("Has empezado el colegio de Primaria. ¡A cargar con la mochila!");
-            } 
-            else if (player.education === "Primaria" && player.age >= 12) {
-                player.education = "Secundaria (ESO)";
-                player.happiness += 5;
-                addLog("Te has matriculado en el instituto para cursar la ESO.");
-            } 
-            else if (player.education === "Secundaria (ESO)" && player.age >= 18) {
+                player.education = "Primaria"; player.happiness += 5;
+                addLog("Has empezado el colegio.");
+            } else if (player.education === "Primaria" && player.age >= 12) {
+                player.education = "Secundaria (ESO)"; player.happiness += 5;
+                addLog("Te has matriculado en el instituto.");
+            } else if (player.education === "Secundaria (ESO)" && player.age >= 18) {
                 if (player.money >= 900) {
-                    player.money -= 900;
-                    player.education = "Universidad (US)";
-                    player.happiness += 10;
-                    addLog("¡A la Universidad de Sevilla! Has pagado 900€ de matrícula.");
+                    player.money -= 900; player.education = "Universidad (US)"; player.happiness += 10;
+                    addLog("¡A la Universidad de Sevilla!");
                 } else {
-                    addLog("Necesitas 900€ para pagar la matrícula de la Universidad de Sevilla.");
-                    return;
+                    addLog("Necesitas 900€ para pagar la matrícula.");
                 }
-            } 
-            else {
-                if (player.education === "Primaria" && player.age < 12) {
-                    addLog(`Estás en Primaria. Podrás pasar a Secundaria a los 12 años. Te faltan ${12 - player.age} años.`);
-                } else if (player.education === "Secundaria (ESO)" && player.age < 18) {
-                    addLog(`Estás en el instituto. Podrás ir a la Universidad a los 18 años. Te faltan ${18 - player.age} años.`);
-                } else {
-                    addLog("Ya has completado tu formación académica.");
-                }
-                return;
+            } else {
+                addLog("Ya has completado tu formación académica o aún no tienes la edad.");
             }
-            updateUI();
-            saveGame();
+            updateUI(); saveGame();
         }
 
         function applyJob() {
             if (player.age < 16) {
-                addLog(`¡Ilegalidad laboral! No puedes trabajar hasta los 16 años. Te faltan ${16 - player.age} años.`);
+                addLog(`¡Ilegalidad laboral! No puedes trabajar hasta los 16 años.`);
                 return;
             }
-
             if (player.job !== "Desempleado") {
-                addLog(`Ya estás trabajando de ${player.job}. Si quieres cambiar, primero debes dejarlo.`);
+                addLog(`Ya estás trabajando de ${player.job}.`);
                 return;
             }
-
             if (player.education.includes("Universidad")) {
-                player.job = "Técnico Junior";
-                player.salary = 21000;
-                addLog("¡Enhorabuena! Has encontrado un puesto cualificado en Sevilla. Sueldo: 21.000€/año.");
+                player.job = "Técnico Junior"; player.salary = 21000;
+                addLog("Has encontrado un puesto cualificado.");
             } else if (player.education.includes("Secundaria")) {
-                player.job = "Camarero / Dependiente";
-                player.salary = 14000;
-                addLog("Has conseguido un empleo en el sector servicios. Sueldo: 14.000€/año.");
+                player.job = "Camarero"; player.salary = 14000;
+                addLog("Has conseguido un empleo en el sector servicios.");
             } else {
-                player.job = "Operario / Repartidor";
-                player.salary = 12000;
-                addLog("Has encontrado un empleo sin cualificación previa. Sueldo: 12.000€/año.");
+                player.job = "Operario"; player.salary = 12000;
+                addLog("Has encontrado un empleo sin cualificación.");
             }
-            updateUI();
-            saveGame();
+            updateUI(); saveGame();
         }
 
         function resetGame() {
-            if (confirm("¿Seguro que quieres borrar la partida y empezar una nueva vida desde cero?")) {
+            if (confirm("¿Borrar partida y empezar desde cero?")) {
                 localStorage.removeItem('sevillalife_save');
                 location.reload();
             }
