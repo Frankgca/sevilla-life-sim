@@ -30,15 +30,20 @@
         input { width: 100%; padding: 12px; margin-top: 6px; border: 2px solid #ecf0f1; border-radius: 10px; font-size: 1em; }
         .start-btn { width: 100%; margin-top: 25px; padding: 14px; background: #C0392B; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1em; cursor: pointer; }
 
-        /* PANTALLA DE JUEGO MEJORADA */
+        /* PANTALLA DE JUEGO */
         header { 
             background: #ffffff; padding: 18px 20px; text-align: center; 
             border-top: 6px solid #E5A54A; box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
         }
-        #player-name { font-family: 'Montserrat', sans-serif; font-size: 1.35em; font-weight: 800; margin-bottom: 4px; color: #C0392B; }
-        #player-dni { font-size: 0.75em; background: #f4f6f7; display: inline-block; padding: 2px 10px; border-radius: 12px; color: #7f8c8d; font-family: monospace; letter-spacing: 0.5px; margin-bottom: 10px; }
+        #player-name { font-family: 'Montserrat', sans-serif; font-size: 1.35em; font-weight: 800; margin-bottom: 6px; color: #C0392B; }
         
-        /* ESTADÍSTICAS MÁS CLARAS Y VISIBLES */
+        /* CÁPSULA DNI CON EL MISMO ESTILO QUE LAS ESTADÍSTICAS */
+        #player-dni { 
+            font-size: 0.75em; display: inline-block; padding: 3px 10px; border-radius: 12px; 
+            color: #555; font-family: monospace; letter-spacing: 0.5px; margin-bottom: 10px;
+            background: #fdf8f0; border: 1px solid #f3e5d0;
+        }
+        
         .stats { 
             display: flex; justify-content: center; gap: 15px; font-size: 0.85em; font-weight: 600; 
             background: #fdf8f0; padding: 8px; border-radius: 8px; border: 1px solid #f3e5d0;
@@ -52,12 +57,12 @@
             font-size: 0.95em; color: #333333; border-left: 4px solid #E5A54A; border-top: 1px solid #f1f1f1; 
         }
         
-        /* BOTONES CON MEJOR CONTRASTE Y LEGIBILIDAD */
+        /* BOTONES CON TEXTO DEL COLOR DEL NOMBRE */
         #actions-panel { padding: 16px; background: white; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 10px; }
         .action-row { display: flex; gap: 10px; }
         .action-btn { 
             flex: 1; padding: 14px; border: 2px solid #E5A54A; border-radius: 10px; 
-            font-weight: 700; cursor: pointer; color: #2c3e50; background: #fffdf9; font-size: 0.95em; 
+            font-weight: 700; cursor: pointer; color: #C0392B; background: #fffdf9; font-size: 0.95em; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             transition: all 0.15s ease;
         }
