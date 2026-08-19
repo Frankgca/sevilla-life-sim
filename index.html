@@ -17,28 +17,28 @@
         /* PANTALLA DE REGISTRO */
         #start-screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #FDFBF7; z-index: 100; padding: 40px 20px;
+            background: #FDFBF7; z-index: 100; padding: 30px 20px;
             display: flex; flex-direction: column; justify-content: center;
         }
         .form-card { 
-            background: white; padding: 25px; border-radius: 20px; 
+            background: white; padding: 22px; border-radius: 20px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid #E5A54A; 
         }
-        h1 { color: #C0392B; font-family: 'Montserrat', sans-serif; font-size: 2em; font-weight: 800; margin-bottom: 5px; text-align: center; letter-spacing: -0.5px; }
-        .subtitle { color: #7f8c8d; font-size: 0.9em; margin-bottom: 5px; text-align: center; }
+        h1 { color: #C0392B; font-family: 'Montserrat', sans-serif; font-size: 1.8em; font-weight: 800; margin-bottom: 5px; text-align: center; letter-spacing: -0.5px; }
+        .subtitle { color: #7f8c8d; font-size: 0.85em; margin-bottom: 5px; text-align: center; }
         
-        .disclaimer { color: #95a5a6; font-size: 0.75em; text-align: center; margin-bottom: 20px; font-style: italic; }
+        .disclaimer { color: #95a5a6; font-size: 0.75em; text-align: center; margin-bottom: 15px; font-style: italic; }
         
-        label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.85em; color: #2c3e50; }
+        label { display: block; margin-top: 12px; font-weight: 600; font-size: 0.85em; color: #2c3e50; }
         
         input { 
-            width: 100%; padding: 12px; margin-top: 6px; 
+            width: 100%; padding: 10px; margin-top: 5px; 
             border: 2px solid #ecf0f1; border-radius: 10px; font-size: 1em; 
             outline: none; background: #fff;
         }
         input:focus { border-color: #E5A54A; }
 
-        .start-btn { width: 100%; margin-top: 25px; padding: 14px; background: #C0392B; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1em; cursor: pointer; }
+        .start-btn { width: 100%; margin-top: 20px; padding: 12px; background: #C0392B; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1em; cursor: pointer; }
 
         /* PANTALLA DE JUEGO */
         header { 
@@ -98,15 +98,18 @@
         }
         .reset-btn:hover { background: #e74c3c; color: white; }
 
-        /* AVISO DE COPYRIGHT VISIBLE EN PANTALLA */
+        /* AVISO DE COPYRIGHT VISIBLE */
         .footer-copyright {
             text-align: center; font-size: 0.7em; color: #95a5a6; padding-top: 4px;
+        }
+        .start-copyright {
+            text-align: center; font-size: 0.65em; color: #95a5a6; margin-top: 15px;
         }
     </style>
 </head>
 <body>
     <div id="game-container">
-        <!-- PANTALLA DE REGISTRO -->
+        <!-- PANTALLA DE REGISTRO CON COPYRIGHT -->
         <div id="start-screen">
             <div class="form-card">
                 <h1>Sevillalife</h1>
@@ -117,6 +120,7 @@
                 <label>Segundo Apellido</label><input type="text" id="surname2-input" maxlength="15" placeholder="Sevillano">
                 <button class="start-btn" onclick="startGame()">Comenzar mi historia</button>
             </div>
+            <div class="start-copyright">© 2026 Frank. Todos los derechos reservados.</div>
         </div>
 
         <header>
