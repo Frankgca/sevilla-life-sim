@@ -25,7 +25,6 @@
             background: white; padding: 25px; border-radius: 20px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid #E5A54A; 
         }
-        /* Aplicamos Montserrat al título principal con toque institucional */
         h1 { color: #C0392B; font-family: 'Montserrat', sans-serif; font-size: 2em; font-weight: 800; margin-bottom: 5px; text-align: center; letter-spacing: -0.5px; }
         .subtitle { color: #7f8c8d; font-size: 0.9em; margin-bottom: 25px; text-align: center; }
         
@@ -47,7 +46,6 @@
             background: #C0392B; color: white; padding: 22px 20px 16px 20px; 
             text-align: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
         }
-        /* Aplicamos Montserrat al nombre del jugador para darle presencia limpia e institucional */
         #player-name { font-family: 'Montserrat', sans-serif; font-size: 1.4em; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px; }
         #player-dni { font-size: 0.8em; background: rgba(0,0,0,0.25); display: inline-block; padding: 3px 10px; border-radius: 12px; margin-bottom: 12px; font-family: monospace; }
         
@@ -64,6 +62,7 @@
         .action-row { display: flex; gap: 10px; }
         .action-btn { flex: 1; padding: 12px; background: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95em; }
         .job-btn { background: #27ae60; }
+        .age-btn { background: #D35400; } /* Botón especial para cumplir años */
         .reset-btn { width: 100%; padding: 10px; background: #C0392B; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9em; opacity: 0.9; }
     </style>
 </head>
@@ -100,7 +99,10 @@
         <!-- PANEL DE ACCIONES -->
         <div id="actions-panel">
             <div class="action-row">
+                <button class="action-btn age-btn" onclick="nextYear()">Cumplir año</button>
                 <button class="action-btn" onclick="study()">Estudiar</button>
+            </div>
+            <div class="action-row">
                 <button class="action-btn job-btn" onclick="searchJob()">Buscar trabajo</button>
             </div>
             <button class="reset-btn" onclick="resetGame()">Reiniciar partida</button>
@@ -151,15 +153,9 @@
             saveGame();
         }
 
-        function renderLogs() {
-            const eventLog = document.getElementById('event-log');
-            eventLog.innerHTML = "";
-            player.logs.forEach(msg => {
-                const div = document.createElement('div');
-                div.className = 'log-entry';
-                div.innerText = msg;
-                eventLog.appendChild(div);
-            });
+        function nextYear() {
+            player.age++;
+            addLog(`Has cumplido ${player.age} años.`);
         }
 
         function study() {
