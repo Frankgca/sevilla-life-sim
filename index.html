@@ -70,9 +70,33 @@
             player.name = `${n} ${s1} ${s2}`;
             player.dni = generateDNI();
             document.getElementById('start-screen').style.display = 'none';
+            updateUI();
+            addLog("Has nacido en Sevilla.");
+            saveGame();
+        }
+
+        function saveGame() { localStorage.setItem('sevillalife_save', JSON.stringify(player)); }
+
+        function updateUI() {
             document.getElementById('player-name').innerText = player.name;
             document.getElementById('player-dni').innerText = `DNI: ${player.dni}`;
-            addLog("Has nacido en Sevilla.");
+        }
+
+        function addLog(text) {
+            player.logs.unshift(`[${player.age} años] ${text}`);
+            renderLogs();
+            saveGame();
+        }
+
+        function renderLogs() {
+            let eventLog = document.getElementById('event-log');
+            eventLog.innerHTML = "";
+            player.logs.forEach(msg => {
+                let div = document.createElement('div');
+                div.className = 'log-entry';
+                div.innerText = msg;
+                eventLog.appendChild(div);
+            });
         }
 
         function study() {
@@ -83,14 +107,17 @@
             }
         }
 
-        function addLog(text) {
-            let div = document.createElement('div');
-            div.className = 'log-entry';
-            div.innerText = `[${player.age} años] ${text}`;
-            document.getElementById('event-log').prepend(div);
-        }
+        function resetGame() { localStorage.removeItem('sevillalife_save'); location.reload(); }
 
-        function resetGame() { location.reload(); }
+        window.onload = () => {
+            let saved = localStorage.getItem('sevillalife_save');
+            if (saved) {
+                player = JSON.parse(saved);
+                document.getElementById('start-screen').style.display = 'none';
+                updateUI();
+                renderLogs();
+            }
+        };
     </script>
 </body>
 </html>
