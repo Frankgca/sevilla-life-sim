@@ -2,122 +2,103 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sevillalife: Registro Civil</title>
+    <title>Sevillalife</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #2c3e50; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        #game-container { width: 100%; max-width: 440px; background-color: #FDFBF7; display: flex; flex-direction: column; height: 100vh; position: relative; overflow: hidden; }
-        #start-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #FDFBF7; z-index: 100; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; }
-        .form-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid #E5A54A; }
-        h1 { color: #C0392B; font-size: 1.8em; margin-bottom: 5px; }
-        .subtitle { color: #7f8c8d; font-size: 0.9em; margin-bottom: 20px; }
-        .privacy-note { font-size: 0.75em; color: #95a5a6; margin-top: 10px; font-style: italic; line-height: 1.2; }
-        label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.85em; color: #2c3e50; }
-        input { width: 100%; padding: 12px; margin-top: 6px; border: 2px solid #ecf0f1; border-radius: 10px; font-size: 1em; }
-        button { width: 100%; margin-top: 25px; padding: 14px; background: #C0392B; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        body { margin: 0; background-color: #2c3e50; font-family: sans-serif; display: flex; justify-content: center; }
+        #game-container { width: 100%; max-width: 440px; background-color: #FDFBF7; height: 100vh; display: flex; flex-direction: column; }
+        
+        /* Pantallas */
+        .screen { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+        #start-screen { justify-content: center; }
+        #main-ui { display: none; } /* Oculto por defecto */
+        
+        .form-card { background: white; padding: 20px; border-radius: 15px; border-top: 5px solid #E5A54A; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         header { background: #C0392B; color: white; padding: 20px; text-align: center; }
-        #player-dni { font-size: 0.85em; background: rgba(0,0,0,0.2); display: inline-block; padding: 2px 10px; border-radius: 15px; margin-top: 5px; }
-        .stats { display: flex; justify-content: space-around; margin-top: 15px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; }
-        #event-log { flex-grow: 1; padding: 20px; overflow-y: auto; }
-        .log-entry { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        #actions-panel { display: flex; gap: 10px; padding: 15px; background: white; border-top: 1px solid #eee; }
-        .action-btn { flex: 1; padding: 12px; background: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        footer { padding: 15px; background: #f9f9f9; text-align: center; }
+        #event-log { flex: 1; overflow-y: auto; padding: 10px; }
+        .log-entry { background: #eee; padding: 10px; margin-bottom: 5px; border-radius: 5px; font-size: 0.9em; }
+        .controls { padding: 10px; border-top: 1px solid #ccc; }
+        button { width: 100%; padding: 12px; margin-top: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <div id="start-screen">
-            <div class="form-card">
-                <h1>Alta en el Padrón</h1>
-                <p class="subtitle">Bienvenido, introduce tus datos:</p>
-                <label>Nombre</label><input type="text" id="name-input">
-                <label>1er Apellido</label><input type="text" id="surname1-input">
-                <label>2do Apellido</label><input type="text" id="surname2-input">
-                <p class="privacy-note">* No es necesario que los datos sean reales. Puedes usar un alias.</p>
-                <button onclick="startGame()">Comenzar mi historia</button>
-            </div>
+
+<div id="game-container">
+    <!-- Pantalla Registro -->
+    <div id="start-screen" class="screen">
+        <div class="form-card">
+            <h1>Alta en el Padrón</h1>
+            <input type="text" id="name-input" placeholder="Nombre">
+            <input type="text" id="surname1-input" placeholder="1er Apellido">
+            <input type="text" id="surname2-input" placeholder="2do Apellido">
+            <button onclick="startGame()">Comenzar mi historia</button>
         </div>
-        <header>
-            <h1 id="player-name">---</h1>
-            <div id="player-dni">DNI: ---</div>
-            <div class="stats">
-                <div>❤️ <span id="health-val">100</span>%</div>
-                <div>😊 <span id="happiness-val">100</span>%</div>
-            </div>
-        </header>
-        <main id="event-log"></main>
-        <div id="actions-panel">
-            <button class="action-btn" onclick="study()">Estudiar</button>
-        </div>
-        <footer><button onclick="resetGame()">Reiniciar</button></footer>
     </div>
-    <script>
-        let player = { name: "", dni: "", age: 0, logs: [] };
 
-        function generateDNI() {
-            let num = Math.floor(Math.random() * 100000000);
-            let letters = "TRWAGMYFPDXBNJZSQVHLCKE";
-            return `${num.toString().padStart(8, '0')}${letters.charAt(num % 23)}`;
+    <!-- Pantalla Juego -->
+    <div id="main-ui" class="screen">
+        <header>
+            <h2 id="display-name">---</h2>
+            <div id="display-dni">DNI: ---</div>
+        </header>
+        <div id="event-log"></div>
+        <div class="controls">
+            <button onclick="study()">Estudiar</button>
+            <button onclick="resetGame()" style="background:#ff7675;">Reiniciar partida</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let player = { name: "", dni: "", age: 0, logs: [] };
+
+    // 1. Carga al arrancar
+    window.onload = () => {
+        const saved = localStorage.getItem('sevillalife_data');
+        if (saved) {
+            player = JSON.parse(saved);
+            renderGame();
         }
+    };
 
-        function startGame() {
-            let n = document.getElementById('name-input').value.trim();
-            let s1 = document.getElementById('surname1-input').value.trim();
-            let s2 = document.getElementById('surname2-input').value.trim();
-            if (!n || !s1 || !s2) return alert("Rellena todo, mi arma.");
-            player.name = `${n} ${s1} ${s2}`;
-            player.dni = generateDNI();
-            document.getElementById('start-screen').style.display = 'none';
-            updateUI();
-            addLog("Has nacido en Sevilla.");
-            saveGame();
-        }
+    function startGame() {
+        const n = document.getElementById('name-input').value.trim();
+        const s1 = document.getElementById('surname1-input').value.trim();
+        const s2 = document.getElementById('surname2-input').value.trim();
+        
+        if (!n || !s1 || !s2) return alert("Rellena todo, mi arma.");
+        
+        player.name = `${n} ${s1} ${s2}`;
+        player.dni = Math.floor(Math.random()*100000000) + "TRWAGMYFPDXBNJZSQVHLCKE"[Math.floor(Math.random()*23)];
+        player.logs = ["Has empezado tu vida en Sevilla."];
+        
+        saveAndRefresh();
+    }
 
-        function saveGame() { localStorage.setItem('sevillalife_save', JSON.stringify(player)); }
+    function saveAndRefresh() {
+        localStorage.setItem('sevillalife_data', JSON.stringify(player));
+        renderGame();
+    }
 
-        function updateUI() {
-            document.getElementById('player-name').innerText = player.name;
-            document.getElementById('player-dni').innerText = `DNI: ${player.dni}`;
-        }
+    function renderGame() {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('main-ui').style.display = 'flex';
+        document.getElementById('display-name').innerText = player.name;
+        document.getElementById('display-dni').innerText = "DNI: " + player.dni;
+        
+        const logDiv = document.getElementById('event-log');
+        logDiv.innerHTML = player.logs.map(l => `<div class="log-entry">${l}</div>`).join('');
+    }
 
-        function addLog(text) {
-            player.logs.unshift(`[${player.age} años] ${text}`);
-            renderLogs();
-            saveGame();
-        }
+    function study() {
+        player.logs.unshift("Estudias un poco más.");
+        saveAndRefresh();
+    }
 
-        function renderLogs() {
-            let eventLog = document.getElementById('event-log');
-            eventLog.innerHTML = "";
-            player.logs.forEach(msg => {
-                let div = document.createElement('div');
-                div.className = 'log-entry';
-                div.innerText = msg;
-                eventLog.appendChild(div);
-            });
-        }
-
-        function study() {
-            if (player.age < 6) {
-                addLog(`Eres un niño pequeño, ¡sal a jugar por el barrio! Te faltan ${6 - player.age} años para estudiar.`);
-            } else {
-                addLog("Estás estudiando.");
-            }
-        }
-
-        function resetGame() { localStorage.removeItem('sevillalife_save'); location.reload(); }
-
-        window.onload = () => {
-            let saved = localStorage.getItem('sevillalife_save');
-            if (saved) {
-                player = JSON.parse(saved);
-                document.getElementById('start-screen').style.display = 'none';
-                updateUI();
-                renderLogs();
-            }
-        };
-    </script>
+    function resetGame() {
+        localStorage.removeItem('sevillalife_data');
+        location.reload();
+    }
+</script>
 </body>
 </html>
