@@ -39,6 +39,7 @@
         input:focus { border-color: #E5A54A; }
 
         .start-btn { width: 100%; margin-top: 14px; padding: 10px; background: #C0392B; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 0.95em; cursor: pointer; }
+        .import-start-btn { width: 100%; margin-top: 6px; padding: 8px; background: #fdf8f0; color: #C0392B; border: 2px dashed #E5A54A; border-radius: 8px; font-weight: bold; font-size: 0.8em; cursor: pointer; }
 
         /* PANTALLA DE JUEGO */
         header { 
@@ -101,9 +102,17 @@
         }
         .action-btn:active { transform: scale(0.98); opacity: 0.9; }
         
+        .bottom-buttons { display: flex; gap: 5px; }
+        .secondary-btn { 
+            flex: 1; background: #fdf8f0; color: #C0392B; border: 1px solid #E5A54A; 
+            padding: 5px; border-radius: 6px; font-size: 0.65em; font-weight: 700; 
+            cursor: pointer; transition: background 0.2s;
+        }
+        .secondary-btn:hover { background: #faebd7; }
+
         .reset-btn { 
             background: #fff; color: #c0392b; border: 2px solid #e74c3c; 
-            padding: 5px; border-radius: 6px; font-size: 0.7em; font-weight: 700; 
+            padding: 4px; border-radius: 6px; font-size: 0.65em; font-weight: 700; 
             cursor: pointer; transition: background 0.2s, color 0.2s;
         }
         .reset-btn:hover { background: #e74c3c; color: white; }
@@ -135,6 +144,7 @@
                 <label>Primer Apellido</label><input type="text" id="surname1-input" maxlength="15" placeholder="García">
                 <label>Segundo Apellido</label><input type="text" id="surname2-input" maxlength="15" placeholder="Sevillano">
                 <button class="start-btn" onclick="startGame()">Comenzar mi historia</button>
+                <button class="import-start-btn" onclick="importGame()">Importar código de partida</button>
             </div>
             <div class="start-copyright">© 2026 Frank. Todos los derechos reservados.</div>
         </div>
@@ -167,6 +177,10 @@
             <div class="action-row">
                 <button class="action-btn" onclick="searchJob()">Buscar trabajo</button>
             </div>
+            <div class="bottom-buttons">
+                <button class="secondary-btn" onclick="exportGame()">Exportar partida</button>
+                <button class="secondary-btn" onclick="importGame()">Importar código</button>
+            </div>
             <button class="reset-btn" onclick="resetGame()">Reiniciar partida</button>
             <div class="footer-copyright">© 2026 Frank. Todos los derechos reservados.</div>
         </div>
@@ -198,6 +212,35 @@
             document.getElementById('start-screen').style.display = 'none';
             updateUI();
             renderLogs();
+        }
+
+        function exportGame() {
+            let dataStr = btoa(encodeURIComponent(JSON.stringify(player)));
+            let userCode = prompt("Copia este código de tu partida para llevarlo a otro dispositivo:", dataStr);
+            if (userCode !== null) {
+                // Opcional por si quiere re-copiarlo
+            }
+        }
+
+        function importGame() {
+            let code = prompt("Pega aquí el código de tu partida:");
+            if (code && code.trim() !== "") {
+                try {
+                    let decodedData = JSON.parse(decodeURIComponent(atob(code.trim())));
+                    if (decodedData && decodedData.name && typeof decodedData.age !== 'undefined') {
+                        player = decodedData;
+                        saveGame();
+                        document.getElementById('start-screen').style.display = 'none';
+                        updateUI();
+                        renderLogs();
+                        alert("¡Partida cargada con éxito, mi arma!");
+                    } else {
+                        alert("El código no es válido.");
+                    }
+                } catch (e) {
+                    alert("El código está corrupto o mal copiado.");
+                }
+            }
         }
 
         function updateUI() {
