@@ -205,9 +205,7 @@
                 <div class="modal-title" id="modal-title-text">Aviso</div>
                 <div class="modal-message" id="modal-msg-text">Mensaje aquí</div>
                 <textarea id="modal-textarea" class="modal-input" rows="3" style="display:none;"></textarea>
-                <div class="modal-buttons" id="modal-buttons-container">
-                    <!-- Los botones se inyectan por JS según el tipo -->
-                </div>
+                <div class="modal-buttons" id="modal-buttons-container"></div>
             </div>
         </div>
     </div>
@@ -223,7 +221,6 @@
 
         function saveGame() { localStorage.setItem('sevillalife_save', JSON.stringify(player)); }
 
-        // SISTEMA DE VENTANAS MODALES PERSONALIZADAS
         function showModalAlert(title, message, callback) {
             const modal = document.getElementById('custom-modal');
             document.getElementById('modal-title-text').innerText = title;
@@ -269,7 +266,17 @@
             
             let currentCode = "";
             if (player.name !== "") {
-                currentCode = btoa(encodeURIComponent(JSON.stringify(player)));
+                // Solo exportamos los datos esenciales. El tamaño del código será SIEMPRE idéntico.
+                let exportData = {
+                    n: player.name,
+                    d: player.dni,
+                    a: player.age,
+                    h: player.health,
+                    hp: player.happiness,
+                    s: player.studies,
+                    j: player.job
+                };
+                currentCode = btoa(encodeURIComponent(JSON.stringify(exportData)));
             }
             
             const textarea = document.getElementById('modal-textarea');
@@ -291,13 +298,22 @@
                 if (code !== "") {
                     try {
                         let decodedData = JSON.parse(decodeURIComponent(atob(code)));
-                        if (decodedData && decodedData.name && typeof decodedData.age !== 'undefined') {
-                            player = decodedData;
+                        if (decodedData && (decodedData.n || decodedData.name)) {
+                            player = {
+                                name: decodedData.n || decodedData.name,
+                                dni: decodedData.d || decodedData.dni,
+                                age: typeof decodedData.a !== 'undefined' ? decodedData.a : decodedData.age,
+                                health: typeof decodedData.h !== 'undefined' ? decodedData.h : decodedData.health,
+                                happiness: typeof decodedData.hp !== 'undefined' ? decodedData.hp : decodedData.happiness,
+                                studies: decodedData.s || decodedData.studies,
+                                job: decodedData.j || decodedData.job,
+                                logs: [`Partida importada en el año ${decodedData.a || decodedData.age}. ¡Continuamos la historia!`]
+                            };
                             saveGame();
                             document.getElementById('start-screen').style.display = 'none';
                             updateUI();
                             renderLogs();
-                            showModalAlert("¡Éxito!", "Partida cargada correctamente, mi arma.");
+                            showModalAlert("¡Todo en orden!", "Ya tienes los papeles en regla, mi arma.");
                         } else {
                             showModalAlert("Error", "El código no es válido.");
                         }
