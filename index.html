@@ -13,7 +13,7 @@
             display: flex; flex-direction: column; height: 100vh; position: relative; overflow: hidden;
         }
         
-        /* PANTALLA DE REGISTRO (INALTERADA) */
+        /* PANTALLA DE REGISTRO */
         #start-screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: #FDFBF7; z-index: 100; padding: 40px 20px;
@@ -39,25 +39,30 @@
             font-weight: bold; font-size: 1em; 
         }
 
-        /* PANTALLA DE JUEGO */
-        header { background: #C0392B; color: white; padding: 18px 20px; text-align: center; flex-shrink: 0; }
-        #player-name { font-size: 1.35em; font-weight: bold; margin-bottom: 3px; }
-        #player-dni { font-size: 0.8em; background: rgba(0,0,0,0.2); display: inline-block; padding: 2px 8px; border-radius: 10px; margin-bottom: 10px; }
+        /* PANTALLA DE JUEGO (DISEÑO MEJORADO Y LIMPIO) */
+        header { 
+            background: #C0392B; color: white; padding: 22px 20px 16px 20px; 
+            text-align: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        }
+        #player-name { font-size: 1.4em; font-weight: bold; margin-bottom: 4px; letter-spacing: 0.5px; }
+        #player-dni { font-size: 0.8em; background: rgba(0,0,0,0.25); display: inline-block; padding: 3px 10px; border-radius: 12px; margin-bottom: 12px; font-family: monospace; }
         
-        .stats { display: flex; justify-content: space-around; background: rgba(255,255,255,0.15); padding: 6px; border-radius: 8px; font-size: 0.9em; }
+        .stats { display: flex; justify-content: space-around; background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; font-size: 0.9em; font-weight: 600; }
         
         #event-log { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .log-entry { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); color: #333; }
+        .log-entry { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); color: #333; border-left: 4px solid #E5A54A; }
         
-        /* PANEL DE ACCIONES INFERIOR CON TODOS LOS BOTONES INTEGRADOS */
+        /* PANEL DE ACCIONES INFERIOR UNIFICADO */
         #actions-panel { 
             display: flex; flex-direction: column; gap: 8px; padding: 15px; 
-            background: white; border-top: 1px solid #eee; flex-shrink: 0; 
+            background: white; border-top: 1px solid #eef0f2; flex-shrink: 0; 
         }
         .action-row { display: flex; gap: 10px; }
-        .action-btn { flex: 1; padding: 12px; background: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95em; }
+        .action-btn { flex: 1; padding: 12px; background: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95em; transition: opacity 0.2s; }
+        .action-btn:active { opacity: 0.85; }
         .job-btn { background: #27ae60; }
-        .reset-btn { width: 100%; padding: 10px; background: #c0392b; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9em; }
+        .reset-btn { width: 100%; padding: 10px; background: #C0392B; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9em; opacity: 0.9; }
+        .reset-btn:hover { opacity: 1; }
     </style>
 </head>
 <body>
@@ -90,7 +95,7 @@
 
         <main id="event-log"></main>
 
-        <!-- PANEL DE ACCIONES CON BOTÓN DE REINICIAR INTEGRADO -->
+        <!-- PANEL DE ACCIONES -->
         <div id="actions-panel">
             <div class="action-row">
                 <button class="action-btn" onclick="study()">Estudiar</button>
@@ -183,7 +188,6 @@
             if (s) { 
                 try {
                     player = JSON.parse(s);
-                    // Si la partida guardada no tiene nombre o está corrupta, borramos y obligamos a registrarse
                     if (!player.name || player.name.trim() === "") {
                         localStorage.removeItem('sevillalife_save');
                         return;
