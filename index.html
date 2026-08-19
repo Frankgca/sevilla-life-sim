@@ -14,7 +14,7 @@
             display: flex; flex-direction: column; height: 100vh; position: relative; overflow: hidden;
         }
         
-        /* PANTALLA DE REGISTRO (INTACTA, TU DISEÑO ORIGINAL) */
+        /* PANTALLA DE REGISTRO (INALTERABLE) */
         #start-screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: #FDFBF7; z-index: 100; padding: 40px 20px;
@@ -30,29 +30,35 @@
         input { width: 100%; padding: 12px; margin-top: 6px; border: 2px solid #ecf0f1; border-radius: 10px; font-size: 1em; }
         .start-btn { width: 100%; margin-top: 25px; padding: 14px; background: #C0392B; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1em; cursor: pointer; }
 
-        /* PANTALLA DE JUEGO (NUEVA PALETA MÁS SOBRIA Y LOCAL) */
-        header { background: #5c3a21; color: #fdfbf7; padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        #player-name { font-family: 'Montserrat', sans-serif; font-size: 1.3em; font-weight: 700; margin-bottom: 4px; }
-        #player-dni { font-size: 0.75em; background: rgba(255,255,255,0.15); display: inline-block; padding: 2px 8px; border-radius: 6px; color: #fdfbf7; letter-spacing: 0.5px; }
-        .stats { margin-top: 12px; display: flex; justify-content: center; gap: 20px; font-size: 0.9em; font-weight: 600; }
+        /* PANTALLA DE JUEGO (CON LA BARRA ALBERO Y ESTILO LIMPIO) */
+        header { 
+            background: #ffffff; color: #2c3e50; padding: 20px; text-align: center; 
+            border-top: 6px solid #E5A54A; box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+        }
+        #player-name { font-family: 'Montserrat', sans-serif; font-size: 1.3em; font-weight: 700; margin-bottom: 4px; color: #C0392B; }
+        #player-dni { font-size: 0.75em; background: #f4f6f7; display: inline-block; padding: 3px 10px; border-radius: 12px; color: #7f8c8d; font-family: monospace; letter-spacing: 0.5px; }
+        .stats { margin-top: 12px; display: flex; justify-content: center; gap: 20px; font-size: 0.9em; font-weight: 600; color: #34495e; }
         
-        #event-log { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fdfbf7; }
-        .log-entry { background: white; padding: 14px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-size: 0.95em; color: #333333; border-left: 4px solid #C27803; }
+        #event-log { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #FDFBF7; }
+        .log-entry { background: white; padding: 14px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); font-size: 0.95em; color: #333333; border-left: 4px solid #E5A54A; border-top: 1px solid #f1f1f1; }
         
-        /* BOTONES ESPACIADOS CON NUEVOS TONOS TIERRA/INSTITUCIONALES */
-        #actions-panel { padding: 16px; background: white; border-top: 1px solid #e5dad4; display: flex; flex-direction: column; gap: 10px; }
+        /* PANEL DE ACCIONES CON EL MISMO ESTILO LIMPIO */
+        #actions-panel { padding: 16px; background: white; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 10px; }
         .action-row { display: flex; gap: 10px; }
-        .action-btn { flex: 1; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; color: white; font-size: 0.95em; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .action-btn { 
+            flex: 1; padding: 14px; border: 2px solid #E5A54A; border-radius: 10px; 
+            font-weight: 600; cursor: pointer; color: #2c3e50; background: #fffdf9; font-size: 0.95em; 
+            transition: background 0.2s, color 0.2s;
+        }
+        .action-btn:hover { background: #E5A54A; color: white; }
         
-        .age-btn { background: #C27803; }   /* Albero anaranjado elegante */
-        .study-btn { background: #4A6B5B; } /* Verde olivo sobrio */
-        .job-btn { background: #3B6E8C; }   /* Azul terracota/cerámico apagado */
-        .reset-btn { background: #eae5de; color: #5c554e; padding: 10px; border: none; border-radius: 8px; font-size: 0.85em; font-weight: 600; cursor: pointer; }
+        .reset-btn { background: #f8f9fa; color: #7f8c8d; border: 1px solid #ddd; padding: 10px; border-radius: 8px; font-size: 0.85em; font-weight: 600; cursor: pointer; }
+        .reset-btn:hover { background: #e74c3c; color: white; border-color: #e74c3c; }
     </style>
 </head>
 <body>
     <div id="game-container">
-        <!-- PANTALLA DE REGISTRO ORIGINAL -->
+        <!-- PANTALLA DE REGISTRO INTACTA -->
         <div id="start-screen">
             <div class="form-card">
                 <h1>Sevillalife</h1>
@@ -77,11 +83,11 @@
 
         <div id="actions-panel">
             <div class="action-row">
-                <button class="action-btn age-btn" onclick="nextYear()">Cumplir año</button>
-                <button class="action-btn study-btn" onclick="study()">Estudiar</button>
+                <button class="action-btn" onclick="nextYear()">Cumplir año</button>
+                <button class="action-btn" onclick="study()">Estudiar</button>
             </div>
             <div class="action-row">
-                <button class="action-btn job-btn" onclick="searchJob()">Buscar trabajo</button>
+                <button class="action-btn" onclick="searchJob()">Buscar trabajo</button>
             </div>
             <button class="reset-btn" onclick="resetGame()">Reiniciar partida</button>
         </div>
