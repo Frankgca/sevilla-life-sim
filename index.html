@@ -2,127 +2,308 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sevillalife</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            color-scheme: light;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #2c3e50; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        
+        #game-container { 
+            width: 100%; max-width: 440px; background-color: #FDFBF7; 
+            display: flex; flex-direction: column; height: 100dvh; position: relative; overflow: hidden;
         }
-        body {
-            background-color: #FDFBF7 !important;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 10px;
+        
+        /* PANTALLA DE REGISTRO */
+        #start-screen { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #FDFBF7; z-index: 100; padding: 20px;
+            display: flex; flex-direction: column; justify-content: center;
         }
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
+        .form-card { 
+            background: white; padding: 20px; border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid #E5A54A; 
         }
-        .header {
-            background: #FFFFFF;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border-top: 5px solid #C7812F;
-            text-align: center;
+        h1 { color: #C0392B; font-family: 'Montserrat', sans-serif; font-size: 1.8em; font-weight: 800; margin-bottom: 3px; text-align: center; letter-spacing: -0.5px; }
+        .subtitle { color: #7f8c8d; font-size: 0.8em; margin-bottom: 3px; text-align: center; }
+        
+        .disclaimer { color: #95a5a6; font-size: 0.75em; text-align: center; margin-bottom: 10px; font-style: italic; }
+        
+        label { display: block; margin-top: 10px; font-weight: 600; font-size: 0.8em; color: #2c3e50; }
+        
+        input { 
+            width: 100%; padding: 10px; margin-top: 4px; 
+            border: 2px solid #ecf0f1; border-radius: 10px; font-size: 0.95em; 
+            outline: none; background: #fff;
         }
-        .nombre {
-            color: #A41623;
-            font-size: 1.8em;
-            font-weight: bold;
-            margin-bottom: 5px;
+        input:focus { border-color: #E5A54A; }
+
+        .start-btn { width: 100%; margin-top: 18px; padding: 12px; background: #C0392B; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1em; cursor: pointer; }
+
+        /* PANTALLA DE JUEGO */
+        header { 
+            background: #ffffff; padding: 12px 16px; text-align: center; 
+            border-top: 6px solid #E5A54A; box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
         }
-        .info-personal {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 12px;
+        #player-name { font-family: 'Montserrat', sans-serif; font-size: 1.2em; font-weight: 800; margin-bottom: 2px; color: #C0392B; }
+        
+        .header-info {
+            display: flex; justify-content: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap;
         }
-        .stats-grid {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
+        
+        .badge { 
+            font-size: 0.7em; display: inline-block; padding: 2px 8px; border-radius: 12px; 
+            color: #555; font-family: monospace; letter-spacing: 0.5px;
+            background: #fdf8f0; border: 1px solid #f3e5d0;
         }
-        .stat-box {
-            flex: 1;
-            background: #F7F4EE;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            font-weight: bold;
-            color: #444;
-            border: 1px solid #E6E0D4;
-            text-align: center;
+        
+        .status-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px;
         }
-        .evento {
-            background: #FFFFFF;
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border-left: 5px solid #C7812F;
-            font-size: 0.95em;
-            line-height: 1.4;
+        
+        .status-badge {
+            background: #fdf8f0; padding: 5px 8px; border-radius: 8px; border: 1px solid #f3e5d0;
+            font-size: 0.7em; font-weight: 600; color: #555; text-align: center;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            background-color: #D32F2F;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(211,47,47,0.3);
+        .status-badge span { font-weight: 700; color: #2c3e50; }
+        
+        .stats { 
+            margin-top: 6px; display: flex; justify-content: center; gap: 12px; font-size: 0.8em; font-weight: 600; 
+            background: #fdf8f0; padding: 5px; border-radius: 8px; border: 1px solid #f3e5d0;
         }
-        .btn-reiniciar {
-            background-color: white;
-            color: #D32F2F;
-            border: 2px solid #D32F2F;
-            box-shadow: none;
+        .stats div { color: #555; }
+        .stats span { font-weight: 700; color: #2c3e50; }
+        
+        #event-log { flex-grow: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #FDFBF7; }
+        .log-entry { 
+            background: white; padding: 12px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); 
+            font-size: 0.9em; color: #333333; border-left: 4px solid #E5A54A; border-top: 1px solid #f1f1f1; 
         }
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.75em;
-            color: #888;
+        
+        /* PANEL DE ACCIONES */
+        #actions-panel { 
+            padding: 12px 16px 14px 16px; 
+            background: white; 
+            border-top: 1px solid #eee; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+        .action-row { display: flex; gap: 8px; }
+        .action-btn { 
+            flex: 1; padding: 11px; background: #C0392B; color: white; border: none; 
+            border-radius: 10px; font-weight: bold; font-size: 0.9em; cursor: pointer; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: opacity 0.2s ease, transform 0.1s ease;
+        }
+        .action-btn:active { transform: scale(0.98); opacity: 0.9; }
+        
+        .reset-btn { 
+            background: #fff; color: #c0392b; border: 2px solid #e74c3c; 
+            padding: 8px; border-radius: 8px; font-size: 0.8em; font-weight: 700; 
+            cursor: pointer; transition: background 0.2s, color 0.2s;
+        }
+        .reset-btn:hover { background: #e74c3c; color: white; }
+
+        /* COPYRIGHT */
+        .footer-copyright {
+            text-align: center; 
+            font-size: 0.65em; 
+            color: #7f8c8d; 
+            margin-top: 2px;
+        }
+        .start-copyright {
+            text-align: center; 
+            font-size: 0.65em; 
+            color: #7f8c8d; 
+            margin-top: 12px;
         }
     </style>
 </head>
 <body>
+    <div id="game-container">
+        <!-- PANTALLA DE REGISTRO CON COPYRIGHT -->
+        <div id="start-screen">
+            <div class="form-card">
+                <h1>Sevillalife</h1>
+                <p class="subtitle">Registro oficial de identidad y alta en el padrón municipal.</p>
+                <p class="disclaimer">* Nota: No es obligatorio introducir tus datos reales.</p>
+                <label>Nombre</label><input type="text" id="name-input" maxlength="15" placeholder="Curro">
+                <label>Primer Apellido</label><input type="text" id="surname1-input" maxlength="15" placeholder="García">
+                <label>Segundo Apellido</label><input type="text" id="surname2-input" maxlength="15" placeholder="Sevillano">
+                <button class="start-btn" onclick="startGame()">Comenzar mi historia</button>
+            </div>
+            <div class="start-copyright">© 2026 Frank. Todos los derechos reservados.</div>
+        </div>
 
-    <div class="container">
-        <div class="header">
-            <div class="nombre">Curro García Sevillano</div>
-            <div class="info-personal">Edad: 0 años &nbsp;|&nbsp; DNI: 22046832K</div>
+        <header>
+            <div id="player-name">---</div>
+            <div class="header-info">
+                <div class="badge" id="player-age">Edad: 0 años</div>
+                <div class="badge" id="player-dni">DNI: ---</div>
+            </div>
             
-            <div class="stats-grid">
-                <div class="stat-box">📚 Ninguno (Bebé)</div>
-                <div class="stat-box">💼 En paro</div>
+            <div class="status-grid">
+                <div class="status-badge">📚 <span id="player-studies">Ninguno</span></div>
+                <div class="status-badge">💼 <span id="player-job">En paro</span></div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-box">❤️ Salud: 100%</div>
-                <div class="stat-box">😊 Felicidad: 100%</div>
+            <div class="stats">
+                <div>❤️ Salud: <span id="health-val">100</span>%</div>
+                <div>😊 Felicidad: <span id="happiness-val">100</span>%</div>
             </div>
+        </header>
+
+        <main id="event-log"></main>
+
+        <div id="actions-panel">
+            <div class="action-row">
+                <button class="action-btn" onclick="nextYear()">Cumplir año</button>
+                <button class="action-btn" onclick="study()">Estudiar</button>
+            </div>
+            <div class="action-row">
+                <button class="action-btn" onclick="searchJob()">Buscar trabajo</button>
+            </div>
+            <button class="reset-btn" onclick="resetGame()">Reiniciar partida</button>
+            <div class="footer-copyright">© 2026 Frank. Todos los derechos reservados.</div>
         </div>
-
-        <div class="evento">
-            Has nacido en Sevilla. ¡Bienvenido al mundo! Tus padres te pasean en carrito por el Parque de María Luisa.
-        </div>
-
-        <button class="btn">Cumplir año</button>
-        <button class="btn">Estudiar</button>
-        <button class="btn">Buscar trabajo</button>
-        <button class="btn btn-reiniciar">Reiniciar partida</button>
-
-        <footer>
-            © 2026 Frank. Todos los derechos reservados.
-        </footer>
     </div>
+    
+    <script>
+        let player = { name: "", dni: "", age: 0, health: 100, happiness: 100, studies: "Ninguno", job: "En paro", logs: [] };
 
+        function generateDNI() {
+            let num = Math.floor(10000000 + Math.random() * 68999999);
+            let letters = "TRWAGMYFPDXBNJZSQVHLCKE";
+            return `${num}${letters.charAt(num % 23)}`;
+        }
+
+        function saveGame() { localStorage.setItem('sevillalife_save', JSON.stringify(player)); }
+
+        function startGame() {
+            let n = document.getElementById('name-input').value.trim();
+            let s1 = document.getElementById('surname1-input').value.trim();
+            let s2 = document.getElementById('surname2-input').value.trim();
+            if (n === "" || s1 === "" || s2 === "") return alert("¡Rellena todo, mi arma!");
+            player.name = `${n} ${s1} ${s2}`;
+            player.dni = generateDNI();
+            player.age = 0;
+            player.studies = "Ninguno (Bebé)";
+            player.job = "En paro";
+            player.logs = ["Has nacido en Sevilla. ¡Bienvenido al mundo! Tus padres te pasean en carrito por el Parque de María Luisa."];
+            saveGame();
+            document.getElementById('start-screen').style.display = 'none';
+            updateUI();
+            renderLogs();
+        }
+
+        function updateUI() {
+            document.getElementById('player-name').innerText = player.name;
+            document.getElementById('player-age').innerText = `Edad: ${player.age} años`;
+            document.getElementById('player-dni').innerText = `DNI: ${player.dni}`;
+            document.getElementById('player-studies').innerText = player.studies;
+            document.getElementById('player-job').innerText = player.job;
+            document.getElementById('health-val').innerText = player.health;
+            document.getElementById('happiness-val').innerText = player.happiness;
+        }
+
+        function renderLogs() {
+            const eventLog = document.getElementById('event-log');
+            eventLog.innerHTML = "";
+            player.logs.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'log-entry';
+                div.innerText = msg;
+                eventLog.appendChild(div);
+            });
+        }
+
+        function addLog(text) {
+            player.logs.unshift(`[${player.age} años] ${text}`);
+            updateUI();
+            renderLogs(); 
+            saveGame();
+        }
+
+        function nextYear() { 
+            player.age++; 
+            let msg = `Has cumplido ${player.age} años.`;
+            if (player.age === 3) {
+                player.studies = "Guardería";
+                msg += " Ya vas a la guardería y juegas en la placita del barrio.";
+            }
+            if (player.age === 6) {
+                player.studies = "Colegio Primaria";
+                msg += " ¡Empiezas el colegio! Toca aprender las tablas de multiplicar y coleccionar cromos.";
+            }
+            if (player.age === 12) {
+                player.studies = "Instituto (ESO)";
+                msg += " ¡Pasas al Instituto! La cosa se pone seria con la ESO.";
+            }
+            if (player.age === 18) {
+                player.studies = "Bachillerato / Universidad";
+                msg += " ¡Ya eres mayor de edad! Puedes sacarte el carné de conducir en Montequinto.";
+            }
+            addLog(msg); 
+        }
+
+        function study() { 
+            if (player.age < 6) {
+                addLog(`Eres un bebé (${player.age} años), aún estás con los dibujos animados y aprendiendo a hablar. ¡Te faltan ${6 - player.age} años para entrar al colegio!`);
+            } else if (player.age >= 6 && player.age < 12) {
+                player.studies = "Colegio Primaria";
+                addLog("Estudias Primaria en el colegio del barrio. ¡Tus mayores preocupaciones son los recreos y los deberes de lengua!");
+            } else if (player.age >= 12 && player.age < 18) {
+                player.studies = "Instituto (ESO/Bach)";
+                addLog("Estudias la ESO / Bachillerato en el instituto. Entre examen y examen, una tostada de aceite con jamón en el recreo.");
+            } else {
+                let opcionesUni = [
+                    "Grado en la Universidad de Sevilla",
+                    "Ciclo Formativo en Nervión",
+                    "Oposiciones en casa"
+                ];
+                player.studies = opcionesUni[Math.floor(Math.random() * opcionesUni.length)];
+                addLog(`Estudias ${player.studies}, aguantando los nervios de los exámenes y buscando hueco en la biblioteca.`);
+            }
+            updateUI();
+            saveGame();
+        }
+
+        function searchJob() { 
+            if (player.age < 16) {
+                addLog(`¡Aún eres menor (${player.age} años)! Por ley no puedes trabajar, céntrate en los estudios, mi arma.`);
+            } else {
+                let trabajosSevilla = [
+                    "Dependiente en calle Sierpes",
+                    "Camarero en la Alameda",
+                    "Reponedor en Triana",
+                    "Repartidor en bicicleta",
+                    "Operario en Lipasam"
+                ];
+                player.job = trabajosSevilla[Math.floor(Math.random() * trabajosSevilla.length)];
+                addLog(`Has encontrado curro y ahora trabajas como: ${player.job}.`);
+            }
+            updateUI();
+            saveGame();
+        }
+
+        function resetGame() {
+            if (confirm("¿Seguro que quieres reiniciar la partida?")) {
+                localStorage.removeItem('sevillalife_save'); 
+                location.reload();
+            }
+        }
+
+        window.onload = () => {
+            let s = localStorage.getItem('sevillalife_save');
+            if (s) {
+                player = JSON.parse(s);
+                document.getElementById('start-screen').style.display = 'none';
+                updateUI();
+                renderLogs();
+            }
+        };
+    </script>
 </body>
 </html>
