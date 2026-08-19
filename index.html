@@ -28,15 +28,12 @@
         .subtitle { color: #7f8c8d; font-size: 0.9em; margin-bottom: 25px; text-align: center; }
         label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.85em; color: #2c3e50; }
         
-        /* INPUTS CON EL ENFOQUE EN COLOR ALBERO */
         input { 
             width: 100%; padding: 12px; margin-top: 6px; 
             border: 2px solid #ecf0f1; border-radius: 10px; font-size: 1em; 
             outline: none; background: #fff;
         }
-        input:focus { 
-            border-color: #E5A54A; 
-        }
+        input:focus { border-color: #E5A54A; }
 
         .start-btn { width: 100%; margin-top: 25px; padding: 14px; background: #C0392B; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1em; cursor: pointer; }
 
@@ -45,11 +42,15 @@
             background: #ffffff; padding: 18px 20px; text-align: center; 
             border-top: 6px solid #E5A54A; box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
         }
-        #player-name { font-family: 'Montserrat', sans-serif; font-size: 1.35em; font-weight: 800; margin-bottom: 6px; color: #C0392B; }
+        #player-name { font-family: 'Montserrat', sans-serif; font-size: 1.25em; font-weight: 800; margin-bottom: 4px; color: #C0392B; }
         
-        #player-dni { 
+        .header-info {
+            display: flex; justify-content: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+        }
+        
+        .badge { 
             font-size: 0.75em; display: inline-block; padding: 3px 10px; border-radius: 12px; 
-            color: #555; font-family: monospace; letter-spacing: 0.5px; margin-bottom: 10px;
+            color: #555; font-family: monospace; letter-spacing: 0.5px;
             background: #fdf8f0; border: 1px solid #f3e5d0;
         }
         
@@ -77,20 +78,11 @@
         .action-btn:active { background: #E5A54A; color: white; transform: scale(0.98); }
         
         .reset-btn { 
-            background: #fff; 
-            color: #c0392b; 
-            border: 2px solid #e74c3c; 
-            padding: 10px; 
-            border-radius: 8px; 
-            font-size: 0.85em; 
-            font-weight: 700; 
-            cursor: pointer; 
-            transition: background 0.2s, color 0.2s;
+            background: #fff; color: #c0392b; border: 2px solid #e74c3c; 
+            padding: 10px; border-radius: 8px; font-size: 0.85em; font-weight: 700; 
+            cursor: pointer; transition: background 0.2s, color 0.2s;
         }
-        .reset-btn:hover { 
-            background: #e74c3c; 
-            color: white; 
-        }
+        .reset-btn:hover { background: #e74c3c; color: white; }
     </style>
 </head>
 <body>
@@ -109,7 +101,10 @@
 
         <header>
             <div id="player-name">---</div>
-            <div id="player-dni">DNI: ---</div>
+            <div class="header-info">
+                <div class="badge" id="player-age">Edad: 0 años</div>
+                <div class="badge" id="player-dni">DNI: ---</div>
+            </div>
             <div class="stats">
                 <div>❤️ Salud: <span id="health-val">100</span>%</div>
                 <div>😊 Felicidad: <span id="happiness-val">100</span>%</div>
@@ -131,7 +126,7 @@
     </div>
     
     <script>
-        let player = { name: "", dni: "", age: 0, health: 100, happiness: 100, logs: [] };
+        let player = { name: "", dni: "", age: 0, health: 100, happiness: 100, job: "Sin empleo", logs: [] };
 
         function generateDNI() {
             let num = Math.floor(10000000 + Math.random() * 68999999);
@@ -148,7 +143,9 @@
             if (n === "" || s1 === "" || s2 === "") return alert("¡Rellena todo, mi arma!");
             player.name = `${n} ${s1} ${s2}`;
             player.dni = generateDNI();
-            player.logs = ["Has nacido en Sevilla. ¡Bienvenidos al mundo!"];
+            player.age = 0;
+            player.job = "Sin empleo";
+            player.logs = ["Has nacido en Sevilla. ¡Bienvenido al mundo! Tus padres te pasean en carrito por el Parque de María Luisa."];
             saveGame();
             document.getElementById('start-screen').style.display = 'none';
             updateUI();
@@ -157,6 +154,7 @@
 
         function updateUI() {
             document.getElementById('player-name').innerText = player.name;
+            document.getElementById('player-age').innerText = `Edad: ${player.age} años`;
             document.getElementById('player-dni').innerText = `DNI: ${player.dni}`;
             document.getElementById('health-val').innerText = player.health;
             document.getElementById('happiness-val').innerText = player.happiness;
@@ -175,13 +173,55 @@
 
         function addLog(text) {
             player.logs.unshift(`[${player.age} años] ${text}`);
+            updateUI();
             renderLogs(); 
             saveGame();
         }
 
-        function nextYear() { player.age++; addLog(`Has cumplido ${player.age} años.`); }
-        function study() { addLog(player.age < 6 ? `Eres un niño pequeño, ¡te faltan ${6 - player.age} años para estudiar!` : "Estás formándote para el futuro."); }
-        function searchJob() { addLog(player.age < 16 ? `¡Aún eres menor de edad (${player.age} años)!` : "Has estado mirando ofertas de empleo."); }
+        function nextYear() { 
+            player.age++; 
+            let msg = `Has cumplido ${player.age} años.`;
+            if (player.age === 3) msg += " Ya vas a la guardería y juegas en la placita del barrio.";
+            if (player.age === 6) msg += " ¡Empiezas el colegio! Toca aprender las tablas de multiplicar y coleccionar cromos.";
+            if (player.age === 12) msg += " ¡Pasas al Instituto! La cosa se pone seria con la ESO.";
+            if (player.age === 18) msg += " ¡Ya eres mayor de edad! Puedes sacarte el carné de conducir en Montequinto.";
+            addLog(msg); 
+        }
+
+        function study() { 
+            if (player.age < 6) {
+                addLog(`Eres un bebé (${player.age} años), aún estás con los dibujos animados y aprendiendo a hablar. ¡Te faltan ${6 - player.age} años para entrar al colegio!`);
+            } else if (player.age >= 6 && player.age < 12) {
+                addLog("Estudias Primaria en el colegio del barrio. ¡Tus mayores preocupaciones son los recreos y los deberes de lengua!");
+            } else if (player.age >= 12 && player.age < 18) {
+                addLog("Estudias la ESO / Bachillerato en el instituto. Entre examen y examen, una tostada de aceite con jamón en el recreo.");
+            } else {
+                let opcionesUni = [
+                    "Estudias el Grado en la Universidad de Sevilla (Pito Flaco / Rectorado), aguantando los nervios de los exámenes de junio.",
+                    "Estudias una Ciclo Formativo de FP en Nervión, aprendiendo un oficio práctico para currar por Sevilla.",
+                    "Estudias en la Escuela de Estudios Hispanoamericanos o preparando oposiciones en casa."
+                ];
+                let estudioActual = opcionesUni[Math.floor(Math.random() * opcionesUni.length)];
+                addLog(estudioActual);
+            }
+        }
+
+        function searchJob() { 
+            if (player.age < 16) {
+                addLog(`¡Aún eres menor (${player.age} años)! Por ley no puedes trabajar, céntrate en los estudios, mi arma.`);
+            } else {
+                let trabajosSevilla = [
+                    "Has encontrado curro como dependiente en una tienda tradicional de la calle Sierpes.",
+                    "Te ha salido un trabajo de camarero en una terraza en la zona de la Alameda de Hércules.",
+                    "Estás trabajando de reponedor en un supermercado de barrio en Triana.",
+                    "Has empezado a repartir pedidos en bicicleta por el centro histórico.",
+                    "Trabajas como operario de mantenimiento para Lipasam por las calles de Sevilla."
+                ];
+                let trabajoElegido = trabajosSevilla[Math.floor(Math.random() * trabajosSevilla.length)];
+                player.job = trabajoElegido;
+                addLog(trabajoElegido);
+            }
+        }
 
         function resetGame() {
             if (confirm("¿Seguro que quieres reiniciar la partida?")) {
