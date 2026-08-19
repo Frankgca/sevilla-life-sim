@@ -199,7 +199,7 @@
 
     <script>
         let player = {
-            name: "Frank",
+            name: "",
             age: 0,
             health: 100,
             happiness: 100,
@@ -230,8 +230,16 @@
         ];
 
         function initGame() {
+            // Pedir nombre al iniciar
+            let inputName = prompt("¿Cómo se llamará tu personaje?", "Frank");
+            if (inputName && inputName.trim() !== "") {
+                player.name = inputName.trim();
+            } else {
+                player.name = "Frank";
+            }
+
             updateUI();
-            addLog("Has nacido en el hospital Virgen del Rocío, en Sevilla. Eres un bebé precioso.");
+            addLog(`Has nacido en el hospital Virgen del Rocío, en Sevilla. Eres un bebé precioso.`);
         }
 
         function updateUI() {
