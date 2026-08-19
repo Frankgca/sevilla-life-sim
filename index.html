@@ -57,7 +57,7 @@
         .action-row { display: flex; gap: 10px; }
         .action-btn { flex: 1; padding: 12px; background: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95em; }
         .job-btn { background: #27ae60; }
-        .reset-btn { width: 100%; padding: 10px; background: #e74c3c; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9em; }
+        .reset-btn { width: 100%; padding: 10px; background: #c0392b; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -103,7 +103,6 @@
     <script>
         let player = { name: "", dni: "", age: 0, health: 100, happiness: 100, logs: [] };
 
-        // Generador de DNI español realista (rango de 8 cifras + letra de control oficial)
         function generateDNI() {
             let num = Math.floor(10000000 + Math.random() * 68999999);
             let letters = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -122,11 +121,11 @@
             player.health = 100;
             player.happiness = 100;
             player.age = 0;
-            player.logs = [];
+            player.logs = ["Has nacido en Sevilla. ¡Bienvenido al mundo!"];
             
             document.getElementById('start-screen').style.display = 'none';
             updateUI();
-            addLog("Has nacido en Sevilla. ¡Bienvenido al mundo!");
+            renderLogs();
             saveGame();
         }
 
@@ -182,14 +181,19 @@
         window.onload = () => {
             let s = localStorage.getItem('sevillalife_save');
             if (s) { 
-                player = JSON.parse(s);
-                if (!player.name) {
-                    resetGame();
-                    return;
+                try {
+                    player = JSON.parse(s);
+                    // Si la partida guardada no tiene nombre o está corrupta, borramos y obligamos a registrarse
+                    if (!player.name || player.name.trim() === "") {
+                        localStorage.removeItem('sevillalife_save');
+                        return;
+                    }
+                    document.getElementById('start-screen').style.display = 'none'; 
+                    updateUI(); 
+                    renderLogs(); 
+                } catch(e) {
+                    localStorage.removeItem('sevillalife_save');
                 }
-                document.getElementById('start-screen').style.display = 'none'; 
-                updateUI(); 
-                renderLogs(); 
             }
         };
     </script>
