@@ -62,7 +62,7 @@
         .action-row { display: flex; gap: 10px; }
         .action-btn { flex: 1; padding: 12px; background: #2980B9; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95em; }
         .job-btn { background: #27ae60; }
-        .age-btn { background: #D35400; } /* Botón especial para cumplir años */
+        .age-btn { background: #D35400; }
         .reset-btn { width: 100%; padding: 10px; background: #C0392B; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9em; opacity: 0.9; }
     </style>
 </head>
@@ -135,7 +135,7 @@
             document.getElementById('start-screen').style.display = 'none';
             updateUI();
             renderLogs();
-            saveGame();
+            saveGame(); // Guardamos al instante nada más nacer para que no se pierda al recargar con 0 años
         }
 
         function saveGame() { localStorage.setItem('sevillalife_save', JSON.stringify(player)); }
@@ -156,6 +156,7 @@
         function nextYear() {
             player.age++;
             addLog(`Has cumplido ${player.age} años.`);
+            saveGame();
         }
 
         function study() {
