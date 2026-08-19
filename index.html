@@ -135,6 +135,7 @@
             if (player.salary > 0) player.money += player.salary;
             addLog(`Has cumplido ${player.age} años.`);
             updateUI();
+            saveGame();
         }
 
         function study() {
@@ -152,7 +153,6 @@
                 player.happiness += 5;
                 addLog("Te has matriculado en el instituto para cursar la ESO.");
             } else if (player.education === "Secundaria (ESO)" && player.age >= 18) {
-                // Matrícula realista Universidad de Sevilla (aprox 900€ curso)
                 if (player.money >= 900) {
                     player.money -= 900;
                     player.education = "Universidad (US)";
@@ -160,14 +160,14 @@
                     addLog("¡A la Universidad de Sevilla! Te has matriculado pagando 900€ de tasas.");
                 } else {
                     addLog("No te llega el dinero para pagar la matrícula de la Universidad de Sevilla (900€).");
+                    return;
                 }
-            } else if (player.education.includes("Universidad") || (player.education === "Primaria" && player.age < 12) || (player.education.includes("Secundaria") && player.age < 18)) {
-                addLog("Ya estás cursando tus estudios o necesitas cumplir más años para pasar de etapa educativa.");
             } else {
-                player.education = "Estudios Finalizados";
-                addLog("¡Has completado tu formación académica en Sevilla!");
+                addLog("Ya estás cursando tus estudios o no tienes la edad suficiente para el siguiente nivel.");
+                return;
             }
             updateUI();
+            saveGame();
         }
 
         function applyJob() {
@@ -177,11 +177,10 @@
             }
 
             if (player.job !== "Desempleado") {
-                addLog(`Ya estás trabajando de ${player.job}. Si quieres cambiar, tendrás que dejarlo antes.`);
+                addLog(`Ya estás trabajando de ${player.job}. Si quieres cambiar, primero debes dejarlo.`);
                 return;
             }
 
-            // Empleos adaptados al mercado español
             if (player.education.includes("Universidad")) {
                 player.job = "Técnico Junior";
                 player.salary = 21000;
@@ -196,6 +195,7 @@
                 addLog("Has encontrado un empleo sin cualificación previa. Sueldo bruto anual: 12.000€.");
             }
             updateUI();
+            saveGame();
         }
     </script>
 </body>
